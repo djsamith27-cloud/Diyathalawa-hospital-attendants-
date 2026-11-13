@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>සේවක පැමිණීමේ කළමනාකරණය</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap');
+        body { font-family: 'Noto Sans Sinhala', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen pb-24">
+
+    <!-- Header -->
+    <header id="appHeader" class="bg-indigo-700 text-white shadow-lg sticky top-0 z-40 transition-colors duration-300">
+        <div class="max-w-4xl mx-auto px-4 py-3.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div>
+                <h1 class="text-base sm:text-lg font-bold flex items-center gap-2">
+                    <i id="headerIcon" class="fa-solid fa-calendar-check text-indigo-200"></i> <span id="headerTitleText">පැමිණීමේ සටහන</span>
+                </h1>
+                <p class="text-xs font-medium text-white/80 mt-0.5">පවිත්‍රතා අංශය, මූලික රෝහල, දියතලාව</p>
+                <p class="text-[11px] text-white/70 mt-0.5 font-mono" id="currentDateTimeDisplay"></p>
+            </div>
+            
+            <!-- Backup & Restore Buttons -->
+            <div class="flex items-center gap-2 self-end sm:self-center">
+                <button onclick="exportDataToJSON()" class="bg-indigo-600 hover:bg-indigo-500 text-xs px-2.5 py-1.5 rounded-lg border border-indigo-500 flex items-center gap-1 shadow-sm" title="Backup (JSON)">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Backup
+                </button>
+                <label class="bg-indigo-600 hover:bg-indigo-500 text-xs px-2.5 py-1.5 rounded-lg border border-indigo-500 flex items-center gap-1 cursor-pointer shadow-sm" title="Restore">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Restore
+                    <input type="file" id="restoreFile" accept=".json" class="hidden" onchange="importDataFromJSON(event)">
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 py-4">
+
+        <!-- TAB 1: ATTENDANCE (Indigo Theme) -->
+        <div id="tab-attendance" class="space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-indigo-100 flex flex-col md:flex-row justify-between items-center gap-3">
+                <div class="w-full md:w-auto flex flex-col sm:flex-row items-center gap-3">
+                    <div class="w-full sm:w-auto">
+                        <label class="block text-xs font-medium text-slate-500 mb-1">දිනය තෝරන්න (පෙර දිනද ඇතුළත් කළ හැක):</label>
+                        <input type="date" id="attendanceDate" onchange="loadAttendanceData()" class="px-3 py-2 border rounded-lg text-sm w-full bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <!-- Shift Switcher -->
+                    <div class="w-full sm:w-auto">
+                        <label class="block text-xs font-medium text-slate-500 mb-1">වැඩ මුරය (Shift):</label>
+                        <div class="flex bg-slate-100 p-1 rounded-lg border">
+                            <button onclick="setShiftMode('day')" id="shiftBtn-day" class="flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-md transition-all bg-sky-600 text-white shadow-sm flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-sun"></i> දිවා (Day)
+                            </button>
+                            <button onclick="setShiftMode('night')" id="shiftBtn-night" class="flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-md transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-moon"></i> රාත්‍රි (Night)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                    <button onclick="markAllCurrentShift(true)" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-medium px-3 py-2 rounded-lg border border-emerald-200 transition-colors">
+                        <i class="fa-solid fa-check-double"></i> සියල්ල පැමිණ ඇත
+                    </button>
+                    <button onclick="markAllCurrentShift(false)" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-medium px-3 py-2 rounded-lg border border-rose-200 transition-colors">
+                        <i class="fa-solid fa-xmark"></i> සියල්ල ඉවත් කරන්න
+                    </button>
+                </div>
+            </div>
+
+            <!-- Attendance List -->
+            <div class="bg-white rounded-xl shadow-sm border border-indigo-100 overflow-hidden">
+                <div class="px-4 py-3 bg-indigo-50 border-b border-indigo-100 flex justify-between items-center">
+                    <h3 class="text-xs font-bold text-indigo-900 uppercase tracking-wider flex items-center gap-2">
+                        <span id="currentShiftTitleIndicator" class="text-sky-600"><i class="fa-solid fa-sun"></i> දිවා වැඩ මුරය</span> - පැමිණීමේ ලැයිස්තුව
+                    </h3>
+                    <span id="attendanceCount" class="text-xs text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-full font-bold">0 / 0</span>
+                </div>
+                <div id="attendanceListContainer" class="divide-y divide-slate-100">
+                    <!-- Dynamic Items -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: EMPLOYEES (Emerald/Green Theme) -->
+        <div id="tab-employees" class="hidden space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-emerald-100 flex flex-col sm:flex-row justify-between items-center gap-3">
+                <div class="relative w-full sm:w-72">
+                    <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400 text-xs"></i>
+                    <input type="text" id="employeeSearchInput" oninput="renderEmployeesList()" placeholder="නම, අංකය හෝ NIC මඟින් සොයන්න..." class="w-full pl-9 pr-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    <button onclick="openEmployeeModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-3.5 py-2 rounded-lg shadow-sm flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-user-plus"></i> නව සේවකයෙක් එකතු කරන්න
+                    </button>
+                    <button onclick="exportEmployeesCSV()" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-medium px-3.5 py-2 rounded-lg shadow-sm flex items-center gap-1.5 transition-colors" title="Export CSV">
+                        <i class="fa-solid fa-file-excel"></i> CSV
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-emerald-100 overflow-hidden">
+                <div class="px-4 py-3 bg-emerald-50 border-b border-emerald-100">
+                    <h3 class="text-xs font-bold text-emerald-900 uppercase tracking-wider">සේවක ලැයිස්තුව සහ පුද්ගලික තොරතුරු</h3>
+                </div>
+                <div id="employeesListContainer" class="divide-y divide-slate-100">
+                    <!-- Dynamic Employees -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: REPORTS (Purple Theme) -->
+        <div id="tab-reports" class="hidden space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-purple-100 flex flex-col sm:flex-row justify-between items-center gap-3">
+                <div class="w-full sm:w-auto flex items-center gap-2">
+                    <label class="text-xs font-medium text-slate-500">මාසය තෝරන්න:</label>
+                    <input type="month" id="reportMonthSelect" onchange="renderReports()" class="px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                <button onclick="exportMonthlyReportCSV()" class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium px-4 py-2 rounded-lg shadow-sm flex items-center justify-center gap-1.5 transition-colors">
+                    <i class="fa-solid fa-file-excel"></i> මාසික වාර්තාව CSV ලෙස Download කරන්න
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-purple-100 overflow-hidden">
+                <div class="px-4 py-3 bg-purple-50 border-b border-purple-100">
+                    <h3 class="text-xs font-bold text-purple-900 uppercase tracking-wider">මාසික සාරාංශ වාර්තාව (දිවා සහ රාත්‍රි)</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-purple-100/60 text-purple-900 border-b border-purple-200">
+                                <th class="p-3 font-semibold">සේවකයා</th>
+                                <th class="p-3 font-semibold text-center">සේවක අංකය</th>
+                                <th class="p-3 font-semibold text-center text-sky-700">දිවා (Day)</th>
+                                <th class="p-3 font-semibold text-center text-purple-700">රාත්‍රි (Night)</th>
+                                <th class="p-3 font-semibold text-center text-emerald-700">මුළු දින</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportTableBody" class="divide-y divide-slate-100">
+                            <!-- Dynamic Report -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: SETTINGS (Slate Theme) -->
+        <div id="tab-settings" class="hidden space-y-4">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 space-y-4">
+                <h3 class="text-sm font-bold text-slate-700 border-b pb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-mobile-screen-button text-indigo-600"></i> දුරකථනයට App එක ස්ථාපනය කරගැනීම
+                </h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    මෙම පද්ධතිය අන්තර්ජාලය නොමැතිව (Offline) වුවද ඔබගේ දුරකථනයෙන් පහසුවෙන් භාවිත කළ හැක. පහත බොත්තම ඔබා App එක ස්ථිරවම ඔබේ දුරකථනයට ලබාගත හැක.
+                </p>
+                <div class="pt-2">
+                    <button onclick="downloadAppFile()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow-md flex items-center gap-2 transition-transform active:scale-95">
+                        <i class="fa-solid fa-download"></i> App ගොනුව (HTML) Download කරන්න
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-rose-100 space-y-3">
+                <h3 class="text-sm font-bold text-rose-600 border-b pb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation"></i> දත්ත කළමනාකරණය සහ යළි පිහිටුවීම
+                </h3>
+                <p class="text-xs text-slate-600">
+                    සියලුම සේවක දත්ත සහ පැමිණීම් ඉවත් කර මුල සිට ආරම්භ කිරීමට අවශ්‍ය නම් පහත බොත්තම භාවිත කරන්න.
+                </p>
+                <button onclick="resetAllData()" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-medium px-3.5 py-2 rounded-lg border border-rose-200 transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-trash-can"></i> සියලු දත්ත මකා දමන්න (Reset All)
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-40 px-2 py-1.5">
+        <div class="max-w-4xl mx-auto flex justify-around items-center">
+            <button onclick="switchTab('attendance')" id="navBtn-attendance" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-indigo-600 bg-indigo-50 transition-all font-bold">
+                <i class="fa-solid fa-calendar-check text-base mb-0.5"></i>
+                <span class="text-[10px]">පැමිණීම</span>
+            </button>
+            <button onclick="switchTab('employees')" id="navBtn-employees" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 hover:text-emerald-600 transition-all">
+                <i class="fa-solid fa-id-card text-base mb-0.5"></i>
+                <span class="text-[10px]">සේවකයන්</span>
+            </button>
+            <button onclick="switchTab('reports')" id="navBtn-reports" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 hover:text-purple-600 transition-all">
+                <i class="fa-solid fa-chart-pie text-base mb-0.5"></i>
+                <span class="text-[10px]">වාර්තා</span>
+            </button>
+            <button onclick="switchTab('settings')" id="navBtn-settings" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 hover:text-slate-800 transition-all">
+                <i class="fa-solid fa-gear text-base mb-0.5"></i>
+                <span class="text-[10px]">සැකසුම්</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- EMPLOYEE ADD/EDIT MODAL -->
+    <div id="employeeModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
+            <div class="px-5 py-4 bg-emerald-50 border-b border-emerald-100 flex justify-between items-center">
+                <h3 id="modalTitle" class="text-sm font-bold text-emerald-900">නව සේවකයෙක් එකතු කරන්න</h3>
+                <button onclick="closeEmployeeModal()" class="text-slate-400 hover:text-slate-600 text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto space-y-3 flex-1">
+                <input type="hidden" id="editEmployeeId">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 mb-1">සම්පූර්ණ නම *</label>
+                        <input type="text" id="empName" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: එච්. එම්. පෙරේරා">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 mb-1">සේවක අංකය *</label>
+                        <input type="text" id="empNo" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: EMP001">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 mb-1">තනතුර</label>
+                        <input type="text" id="empRole" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: වැඩ පරීක්ෂක">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 mb-1">ජාතික හැඳුනුම්පත් අංකය (NIC)</label>
+                        <input type="text" id="empNic" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="NIC අංකය">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 mb-1">සේවය කරන වැඩ මුරය *</label>
+                        <select id="empShiftType" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <option value="both">දිවා සහ රාත්‍රි (Both)</option>
+                            <option value="day">දිවා සේවය පමණයි</option>
+                            <option value="night">රාත්‍රි සේවය පමණයි</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 mb-1">සේවයට බැඳුණු දිනය *</label>
+                        <input type="date" id="empJoinDate" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 mb-1">දුරකථන අංකය</label>
+                        <input type="tel" id="empPhone" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="07XXXXXXXX">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 mb-1">හදිසි ඇමතුම් අංකය</label>
+                        <input type="text" id="empEmergency" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: බිරිඳ - 0712345678">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 mb-1">රුධිර වර්ගය</label>
+                        <select id="empBlood" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <option value="">තෝරන්න</option>
+                            <option value="A+">A+</option><option value="A-">A-</option>
+                            <option value="B+">B+</option><option value="B-">B-</option>
+                            <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                            <option value="O+">O+</option><option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 mb-1">උපන් දිනය</label>
+                        <input type="date" id="empDob" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-medium text-slate-500 mb-1">පදිංචි ලිපිනය</label>
+                    <textarea id="empAddress" rows="2" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="ලිපිනය"></textarea>
+                </div>
+            </div>
+            <div class="px-5 py-3 bg-slate-50 border-t border-slate-100 flex justify-end gap-2">
+                <button onclick="closeEmployeeModal()" class="px-3.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-200">අවලංගු කරන්න</button>
+                <button onclick="saveEmployee()" class="px-4 py-2 rounded-lg text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm">සුරකින්න</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROFILE MODAL -->
+    <div id="profileModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
+            <div class="px-5 py-4 bg-emerald-700 text-white flex justify-between items-center">
+                <h3 class="text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-id-badge"></i> සේවක පැතිකඩ</h3>
+                <button onclick="closeProfileModal()" class="text-emerald-200 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="profileContent" class="p-5 overflow-y-auto space-y-3 text-xs flex-1"></div>
+            <div class="px-5 py-3 bg-slate-50 border-t border-slate-100 flex justify-end">
+                <button onclick="closeProfileModal()" class="px-4 py-2 rounded-lg text-xs font-medium bg-slate-200 text-slate-700">වසන්න</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY_EMP = 'diyatalawa_hosp_emp_v3';
+        const STORAGE_KEY_ATT = 'diyatalawa_hosp_att_v3';
+
+        const defaultEmployees = [
+            { id: '1', name: 'සමිත් මධුසංක', empNo: 'EMP001', role: 'වැඩ පරීක්ෂක', shiftType: 'both', joinDate: '2026-11-01', nic: '921920000V', phone: '0712345678', emergency: 'භාර්යාව - 0719876543', blood: 'O+', dob: '1992-07-10', address: 'දියතලාව' }
+        ];
+
+        let employees = JSON.parse(localStorage.getItem(STORAGE_KEY_EMP)) || defaultEmployees;
+        let attendance = JSON.parse(localStorage.getItem(STORAGE_KEY_ATT)) || {};
+        let currentShift = 'day';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+
+            document.getElementById('attendanceDate').value = todayStr;
+            document.getElementById('reportMonthSelect').value = `${year}-${month}`;
+            
+            updateLiveDateTime();
+            setInterval(updateLiveDateTime, 1000);
+
+            loadAttendanceData();
+            renderEmployeesList();
+            renderReports();
+        });
+
+        function updateLiveDateTime() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            const el = document.getElementById('currentDateTimeDisplay');
+            if(el) el.innerText = `${now.toLocaleDateString('en-US', options)} | ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
+        }
+
+        function switchTab(tabName) {
+            ['attendance', 'employees', 'reports', 'settings'].forEach(t => {
+                const tabEl = document.getElementById(`tab-${t}`);
+                const btnEl = document.getElementById(`navBtn-${t}`);
+                if (tabEl) tabEl.classList.add('hidden');
+                if (btnEl) btnEl.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 hover:text-slate-800 transition-all";
+            });
+
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+            const header = document.getElementById('appHeader');
+            const headerIcon = document.getElementById('headerIcon');
+            const headerTitleText = document.getElementById('headerTitleText');
+            const btn = document.getElementById(`navBtn-${tabName}`);
+
+            if (tabName === 'attendance') {
+                header.className = "bg-indigo-700 text-white shadow-lg sticky top-0 z-40 transition-colors duration-300";
+                headerIcon.className = "fa-solid fa-calendar-check text-indigo-200";
+                headerTitleText.innerText = "පැමිණීමේ සටහන";
+                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-indigo-600 bg-indigo-50 transition-all font-bold";
+            } else if (tabName === 'employees') {
+                header.className = "bg-emerald-700 text-white shadow-lg sticky top-0 z-40 transition-colors duration-300";
+                headerIcon.className = "fa-solid fa-id-card text-emerald-200";
+                headerTitleText.innerText = "සේවක කළමනාකරණය";
+                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-emerald-600 bg-emerald-50 transition-all font-bold";
+            } else if (tabName === 'reports') {
+                header.className = "bg-purple-700 text-white shadow-lg sticky top-0 z-40 transition-colors duration-300";
+                headerIcon.className = "fa-solid fa-chart-pie text-purple-200";
+                headerTitleText.innerText = "මාසික වාර්තා";
+                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-purple-600 bg-purple-50 transition-all font-bold";
+                renderReports();
+            } else if (tabName === 'settings') {
+                header.className = "bg-slate-800 text-white shadow-lg sticky top-0 z-40 transition-colors duration-300";
+                headerIcon.className = "fa-solid fa-gear text-slate-300";
+                headerTitleText.innerText = "යෙදුම් සැකසුම්";
+                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-800 bg-slate-200 transition-all font-bold";
+            }
+        }
+
+        function setShiftMode(shift) {
+            currentShift = shift;
+            const dayBtn = document.getElementById('shiftBtn-day');
+            const nightBtn = document.getElementById('shiftBtn-night');
+            const indicator = document.getElementById('currentShiftTitleIndicator');
+
+            if (shift === 'day') {
+                dayBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-md bg-sky-600 text-white shadow-sm flex items-center justify-center gap-1.5";
+                nightBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-md text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5";
+                indicator.className = "text-sky-600";
+                indicator.innerHTML = `<i class="fa-solid fa-sun"></i> දිවා වැඩ මුරය`;
+            } else {
+                nightBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-md bg-purple-600 text-white shadow-sm flex items-center justify-center gap-1.5";
+                dayBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-md text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5";
+                indicator.className = "text-purple-600";
+                indicator.innerHTML = `<i class="fa-solid fa-moon"></i> රාත්‍රි වැඩ මුරය`;
+            }
+            loadAttendanceData();
+        }
+
+        // --- ATTENDANCE ---
+        function loadAttendanceData() {
+            const selectedDate = document.getElementById('attendanceDate').value;
+            const container = document.getElementById('attendanceListContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const eligibleEmployees = employees.filter(emp => {
+                const sType = emp.shiftType || 'both';
+                if (sType !== 'both' && sType !== currentShift) return false;
+                if (emp.joinDate && selectedDate < emp.joinDate) return false;
+                return true;
+            });
+
+            if (eligibleEmployees.length === 0) {
+                container.innerHTML = `<div class="p-6 text-center text-xs text-slate-400">මෙම දිනයට හෝ වැඩ මුරයට අදාළ සේවකයන් නොමැත.</div>`;
+                document.getElementById('attendanceCount').innerText = `0 / 0`;
+                return;
+            }
+
+            if (!attendance[selectedDate]) attendance[selectedDate] = {};
+
+            let presentCount = 0;
+            eligibleEmployees.forEach(emp => {
+                if (!attendance[selectedDate][emp.id]) {
+                    attendance[selectedDate][emp.id] = { day: false, night: false };
+                }
+                const isPresent = attendance[selectedDate][emp.id][currentShift] === true;
+                if (isPresent) presentCount++;
+
+                const div = document.createElement('div');
+                div.className = "px-4 py-3 flex items-center justify-between hover:bg-slate-50/80 transition-colors";
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleCurrentShift('${selectedDate}', '${emp.id}')" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all shadow-sm ${isPresent ? 'bg-emerald-100 text-emerald-700 border border-emerald-300' : 'bg-rose-100 text-rose-700 border border-rose-300'}">
+                            ${isPresent ? '<i class="fa-solid fa-check text-emerald-600"></i>' : '<i class="fa-solid fa-xmark text-rose-600"></i>'}
+                        </button>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800">${emp.name} <span class="text-[9px] text-slate-400 font-normal">(${emp.shiftType === 'day' ? 'දිවා පමණයි' : emp.shiftType === 'night' ? 'රාත්‍රි පමණයි' : 'දෙකම'})</span></h4>
+                            <div class="flex items-center gap-2 mt-0.5">
+                                <span class="text-[10px] text-slate-400">${emp.empNo}</span>
+                                ${emp.phone ? `<a href="tel:${extractPhone(emp.phone)}" class="text-[10px] text-indigo-600 hover:underline flex items-center gap-1"><i class="fa-solid fa-phone"></i> ${emp.phone}</a>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="toggleCurrentShift('${selectedDate}', '${emp.id}')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${isPresent ? (currentShift === 'day' ? 'bg-sky-600 text-white shadow-sm' : 'bg-purple-600 text-white shadow-sm') : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                        ${isPresent ? '<i class="fa-solid fa-check"></i> පැමිණ ඇත' : 'නොපැමිණි'}
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('attendanceCount').innerText = `${presentCount} / ${eligibleEmployees.length}`;
+            saveToStorage();
+        }
+
+        function toggleCurrentShift(date, empId) {
+            if (!attendance[date]) attendance[date] = {};
+            if (!attendance[date][empId]) attendance[date][empId] = { day: false, night: false };
+            
+            attendance[date][empId][currentShift] = !attendance[date][empId][currentShift];
+            loadAttendanceData();
+        }
+
+        function markAllCurrentShift(status) {
+            const selectedDate = document.getElementById('attendanceDate').value;
+            if (!attendance[selectedDate]) attendance[selectedDate] = {};
+            
+            employees.forEach(emp => {
+                const sType = emp.shiftType || 'both';
+                if ((sType === 'both' || sType === currentShift) && (!emp.joinDate || selectedDate >= emp.joinDate)) {
+                    if (!attendance[selectedDate][emp.id]) attendance[selectedDate][emp.id] = { day: false, night: false };
+                    attendance[selectedDate][emp.id][currentShift] = status;
+                }
+            });
+            loadAttendanceData();
+        }
+
+        // --- EMPLOYEES ---
+        function renderEmployeesList() {
+            const search = document.getElementById('employeeSearchInput')?.value.toLowerCase() || '';
+            const container = document.getElementById('employeesListContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const filtered = employees.filter(e => 
+                e.name.toLowerCase().includes(search) || 
+                e.empNo.toLowerCase().includes(search) || 
+                (e.nic && e.nic.toLowerCase().includes(search))
+            );
+
+            filtered.forEach(emp => {
+                const div = document.createElement('div');
+                div.className = "px-4 py-3 flex items-center justify-between hover:bg-slate-50/80 transition-colors";
+                div.innerHTML = `
+                    <div class="flex items-center gap-3 cursor-pointer" onclick="viewProfile('${emp.id}')">
+                        <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">${emp.name.charAt(0)}</div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800">${emp.name} <span class="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded ml-1">${emp.role || 'සේවක'}</span></h4>
+                            <span class="text-[10px] text-slate-500">අංකය: <b>${emp.empNo}</b> | බැඳුණු දිනය: <b>${emp.joinDate || '-'}</b></span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        ${emp.phone ? `<a href="tel:${extractPhone(emp.phone)}" class="bg-emerald-50 text-emerald-700 text-xs px-2.5 py-1.5 rounded-lg border border-emerald-200"><i class="fa-solid fa-phone"></i></a>` : ''}
+                        <button onclick="editEmployee('${emp.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-2.5 py-1.5 rounded-lg"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteEmployee('${emp.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs px-2.5 py-1.5 rounded-lg"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function openEmployeeModal(id = null) {
+            document.getElementById('editEmployeeId').value = id || '';
+            document.getElementById('modalTitle').innerText = id ? 'සේවක තොරතුරු සංස්කරණය' : 'නව සේවකයෙක් එකතු කරන්න';
+            
+            const now = new Date();
+            const defaultJoin = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+
+            if (id) {
+                const emp = employees.find(e => e.id === id);
+                document.getElementById('empName').value = emp.name || '';
+                document.getElementById('empNo').value = emp.empNo || '';
+                document.getElementById('empRole').value = emp.role || '';
+                document.getElementById('empShiftType').value = emp.shiftType || 'both';
+                document.getElementById('empJoinDate').value = emp.joinDate || defaultJoin;
+                document.getElementById('empNic').value = emp.nic || '';
+                document.getElementById('empPhone').value = emp.phone || '';
+                document.getElementById('empEmergency').value = emp.emergency || '';
+                document.getElementById('empBlood').value = emp.blood || '';
+                document.getElementById('empDob').value = emp.dob || '';
+                document.getElementById('empAddress').value = emp.address || '';
+            } else {
+                ['empName', 'empNo', 'empRole', 'empNic', 'empPhone', 'empEmergency', 'empBlood', 'empDob', 'empAddress'].forEach(i => document.getElementById(i).value = '');
+                document.getElementById('empShiftType').value = 'both';
+                document.getElementById('empJoinDate').value = defaultJoin;
+                document.getElementById('empNo').value = 'EMP0' + (employees.length + 1);
+            }
+            document.getElementById('employeeModal').classList.remove('hidden');
+        }
+
+        function closeEmployeeModal() { document.getElementById('employeeModal').classList.add('hidden'); }
+
+        function saveEmployee() {
+            const id = document.getElementById('editEmployeeId').value;
+            const name = document.getElementById('empName').value.trim();
+            const empNo = document.getElementById('empNo').value.trim();
+            const joinDate = document.getElementById('empJoinDate').value;
+
+            if (!name || !empNo || !joinDate) {
+                alert('කරුණාකර නම, අංකය සහ බැඳුණු දිනය ඇතුළත් කරන්න.');
+                return;
+            }
+
+            const empData = {
+                id: id || Date.now().toString(),
+                name, empNo,
+                role: document.getElementById('empRole').value.trim(),
+                shiftType: document.getElementById('empShiftType').value,
+                joinDate,
+                nic: document.getElementById('empNic').value.trim(),
+                phone: document.getElementById('empPhone').value.trim(),
+                emergency: document.getElementById('empEmergency').value.trim(),
+                blood: document.getElementById('empBlood').value,
+                dob: document.getElementById('empDob').value,
+                address: document.getElementById('empAddress').value.trim()
+            };
+
+            if (id) {
+                const index = employees.findIndex(e => e.id === id);
+                if (index !== -1) employees[index] = empData;
+            } else {
+                employees.push(empData);
+            }
+
+            saveToStorage();
+            closeEmployeeModal();
+            renderEmployeesList();
+            loadAttendanceData();
+        }
+
+        function editEmployee(id) { openEmployeeModal(id); }
+
+        function deleteEmployee(id) {
+            if (confirm('මෙම සේවකයා ඉවත් කිරීමට අවශ්‍ය බව ස්ථිරද?')) {
+                employees = employees.filter(e => e.id !== id);
+                saveToStorage();
+                renderEmployeesList();
+                loadAttendanceData();
+            }
+        }
+
+        function viewProfile(id) {
+            const emp = employees.find(e => e.id === id);
+            if (!emp) return;
+            document.getElementById('profileContent').innerHTML = `
+                <div class="text-center pb-3 border-b">
+                    <h4 class="font-bold text-slate-800 text-sm">${emp.name}</h4>
+                    <p class="text-[11px] text-emerald-600 font-medium">${emp.role || 'සේවක'} (${emp.empNo})</p>
+                </div>
+                <div class="space-y-1.5 text-xs">
+                    <p><b>බැඳුණු දිනය:</b> ${emp.joinDate || '-'}</p>
+                    <p><b>NIC:</b> ${emp.nic || '-'}</p>
+                    <p><b>දුරකථන:</b> ${emp.phone || '-'}</p>
+                    <p><b>හදිසි ඇමතුම්:</b> ${emp.emergency || '-'}</p>
+                    <p><b>රුධිර වර්ගය:</b> ${emp.blood || '-'}</p>
+                    <p><b>ලිපිනය:</b> ${emp.address || '-'}</p>
+                </div>
+            `;
+            document.getElementById('profileModal').classList.remove('hidden');
+        }
+
+        function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); }
+
+        // --- REPORTS ---
+        function renderReports() {
+            const monthInput = document.getElementById('reportMonthSelect').value;
+            const tbody = document.getElementById('reportTableBody');
+            if (!tbody || !monthInput) return;
+            tbody.innerHTML = '';
+
+            const [year, month] = monthInput.split('-').map(Number);
+            const daysInMonth = new Date(year, month, 0).getDate();
+
+            employees.forEach(emp => {
+                let dayCount = 0, nightCount = 0;
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    if (emp.joinDate && dateKey < emp.joinDate) continue;
+
+                    if (attendance[dateKey] && attendance[dateKey][emp.id]) {
+                        if (attendance[dateKey][emp.id].day) dayCount++;
+                        if (attendance[dateKey][emp.id].night) nightCount++;
+                    }
+                }
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-purple-50/50 border-b border-purple-100";
+                tr.innerHTML = `
+                    <td class="p-3 font-semibold text-slate-800">${emp.name}</td>
+                    <td class="p-3 text-center text-slate-500">${emp.empNo}</td>
+                    <td class="p-3 text-center font-bold text-sky-700">${dayCount}</td>
+                    <td class="p-3 text-center font-bold text-purple-700">${nightCount}</td>
+                    <td class="p-3 text-center font-bold text-emerald-700">${dayCount + nightCount}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- CSV EXPORTS ---
+        function exportMonthlyReportCSV() {
+            const monthStr = document.getElementById('reportMonthSelect').value;
+            if (!monthStr) return;
+            const [year, month] = monthStr.split('-').map(Number);
+            const daysInMonth = new Date(year, month, 0).getDate();
+            let csv = "\uFEFFසේවකයා,සේවක අංකය,දිවා දින,රාත්‍රි දින,මුළු දින\n";
+            employees.forEach(emp => {
+                let dayCount = 0, nightCount = 0;
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    if (emp.joinDate && dateKey < emp.joinDate) continue;
+                    if (attendance[dateKey] && attendance[dateKey][emp.id]) {
+                        if (attendance[dateKey][emp.id].day) dayCount++;
+                        if (attendance[dateKey][emp.id].night) nightCount++;
+                    }
+                }
+                csv += `"${emp.name}","${emp.empNo}",${dayCount},${nightCount},${dayCount + nightCount}\n`;
+            });
+            downloadFile(csv, `Attendance_Report_${monthStr}.csv`, 'text/csv;charset=utf-8;');
+        }
+
+        function exportEmployeesCSV() {
+            let csv = "\uFEFFනම,සේවක අංකය,තනතුර,NIC,දුරකථන,ලිපිනය\n";
+            employees.forEach(e => {
+                csv += `"${e.name}","${e.empNo}","${e.role || ''}","${e.nic || ''}","${e.phone || ''}","${e.address || ''}"\n`;
+            });
+            downloadFile(csv, `Employees_List.csv`, 'text/csv;charset=utf-8;');
+        }
+
+        // --- BACKUP & RESTORE ---
+        function saveToStorage() {
+            localStorage.setItem(STORAGE_KEY_EMP, JSON.stringify(employees));
+            localStorage.setItem(STORAGE_KEY_ATT, JSON.stringify(attendance));
+        }
+
+        function exportDataToJSON() {
+            const data = { employees, attendance };
+            const dataStr = JSON.stringify(data, null, 2);
+            downloadFile(dataStr, `Attendance_Backup_${new Date().toISOString().split('T')[0]}.json`, 'application/json');
+        }
+
+        function importDataFromJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed.employees && parsed.attendance) {
+                        employees = parsed.employees;
+                        attendance = parsed.attendance;
+                        saveToStorage();
+                        loadAttendanceData();
+                        renderEmployeesList();
+                        renderReports();
+                        alert('දත්ත සාර්ථකව ප්‍රතිස්ථාපනය (Restore) විය!');
+                    } else {
+                        alert('වලංගු නොවන Backup ගොනුවකි.');
+                    }
+                } catch(err) {
+                    alert('ගොනුව කියවීමේ දෝෂයක් ඇත.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function resetAllData() {
+            if (confirm('සියලුම සේවක සහ පැමිණීමේ දත්ත මකා දැමීමට අවශ්‍ය බව ස්ථිරද? මෙය නැවත ලබාගත නොහැක!')) {
+                localStorage.clear();
+                employees = [];
+                attendance = {};
+                loadAttendanceData();
+                renderEmployeesList();
+                renderReports();
+                alert('දත්ත සියල්ල ඉවත් කරන ලදී.');
+            }
+        }
+
+        function downloadAppFile() {
+            const htmlContent = document.documentElement.outerHTML;
+            downloadFile(htmlContent, 'Sewaka_Attendance_App.html', 'text/html;charset=utf-8');
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type: type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function extractPhone(str) {
+            const match = str.match(/0\d{9}/);
+            return match ? match[0] : str.replace(/\D/g, '');
+        }
+    </script>
+</body>
+</html>
