@@ -8,28 +8,52 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap');
-        body { font-family: 'Noto Sans Sinhala', sans-serif; }
+        body { 
+            font-family: 'Noto Sans Sinhala', sans-serif; 
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            min-height: 100vh;
+        }
+        /* Glassmorphism Classes */
+        .glass-header {
+            background: rgba(79, 70, 229, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+        }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen pb-24">
+<body class="text-slate-800 min-h-screen pb-24">
 
     <!-- Header -->
-    <header id="appHeader" class="bg-indigo-700 text-white shadow-lg sticky top-0 z-40 transition-colors duration-300">
+    <header id="appHeader" class="glass-header text-white shadow-lg sticky top-0 z-40 transition-colors duration-300">
         <div class="max-w-4xl mx-auto px-4 py-3.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div>
                 <h1 class="text-base sm:text-lg font-bold flex items-center gap-2">
                     <i id="headerIcon" class="fa-solid fa-calendar-check text-indigo-200"></i> <span id="headerTitleText">පැමිණීමේ සටහන</span>
                 </h1>
-                <p class="text-xs font-medium text-white/80 mt-0.5">පවිත්‍රතා අංශය, මූලික රෝහල, දියතලාව</p>
-                <p class="text-[11px] text-white/70 mt-0.5 font-mono" id="currentDateTimeDisplay"></p>
+                <p class="text-xs font-medium text-white/90 mt-0.5">පවිත්‍රතා අංශය, මූලික රෝහල, දියතලාව</p>
+                <p class="text-[11px] text-white/80 mt-0.5 font-mono" id="currentDateTimeDisplay"></p>
             </div>
             
             <!-- Backup & Restore Buttons -->
             <div class="flex items-center gap-2 self-end sm:self-center">
-                <button onclick="exportDataToJSON()" class="bg-indigo-600 hover:bg-indigo-500 text-xs px-2.5 py-1.5 rounded-lg border border-indigo-500 flex items-center gap-1 shadow-sm" title="Backup (JSON)">
+                <button onclick="exportDataToJSON()" class="bg-white/20 hover:bg-white/30 text-xs px-2.5 py-1.5 rounded-lg border border-white/30 flex items-center gap-1 shadow-sm font-semibold transition-all" title="Backup (JSON)">
                     <i class="fa-solid fa-cloud-arrow-down"></i> Backup
                 </button>
-                <label class="bg-indigo-600 hover:bg-indigo-500 text-xs px-2.5 py-1.5 rounded-lg border border-indigo-500 flex items-center gap-1 cursor-pointer shadow-sm" title="Restore">
+                <label class="bg-white/20 hover:bg-white/30 text-xs px-2.5 py-1.5 rounded-lg border border-white/30 flex items-center gap-1 cursor-pointer shadow-sm font-semibold transition-all" title="Restore">
                     <i class="fa-solid fa-cloud-arrow-up"></i> Restore
                     <input type="file" id="restoreFile" accept=".json" class="hidden" onchange="importDataFromJSON(event)">
                 </label>
@@ -38,24 +62,24 @@
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-4xl mx-auto px-4 py-4">
+    <main class="max-w-4xl mx-auto px-4 py-4 space-y-4">
 
         <!-- TAB 1: ATTENDANCE (Indigo Theme) -->
         <div id="tab-attendance" class="space-y-4">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-indigo-100 flex flex-col md:flex-row justify-between items-center gap-3">
+            <div class="glass-card p-4 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-3">
                 <div class="w-full md:w-auto flex flex-col sm:flex-row items-center gap-3">
                     <div class="w-full sm:w-auto">
-                        <label class="block text-xs font-medium text-slate-500 mb-1">දිනය තෝරන්න (පෙර දිනද ඇතුළත් කළ හැක):</label>
-                        <input type="date" id="attendanceDate" onchange="loadAttendanceData()" class="px-3 py-2 border rounded-lg text-sm w-full bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <label class="block text-xs font-medium text-slate-600 mb-1">දිනය තෝරන්න (පෙර දිනද ඇතුළත් කළ හැක):</label>
+                        <input type="date" id="attendanceDate" onchange="loadAttendanceData()" class="px-3 py-2 border rounded-xl text-sm w-full bg-white/60 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <!-- Shift Switcher -->
                     <div class="w-full sm:w-auto">
-                        <label class="block text-xs font-medium text-slate-500 mb-1">වැඩ මුරය (Shift):</label>
-                        <div class="flex bg-slate-100 p-1 rounded-lg border">
-                            <button onclick="setShiftMode('day')" id="shiftBtn-day" class="flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-md transition-all bg-sky-600 text-white shadow-sm flex items-center justify-center gap-1.5">
+                        <label class="block text-xs font-medium text-slate-600 mb-1">වැඩ මුරය (Shift):</label>
+                        <div class="flex bg-white/50 p-1 rounded-xl border border-white/60">
+                            <button onclick="setShiftMode('day')" id="shiftBtn-day" class="flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg transition-all bg-sky-600 text-white shadow-sm flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-sun"></i> දිවා (Day)
                             </button>
-                            <button onclick="setShiftMode('night')" id="shiftBtn-night" class="flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-md transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
+                            <button onclick="setShiftMode('night')" id="shiftBtn-night" class="flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-moon"></i> රාත්‍රි (Night)
                             </button>
                         </div>
@@ -63,51 +87,51 @@
                 </div>
 
                 <div class="flex items-center gap-2 w-full md:w-auto justify-end">
-                    <button onclick="markAllCurrentShift(true)" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-medium px-3 py-2 rounded-lg border border-emerald-200 transition-colors">
+                    <button onclick="markAllCurrentShift(true)" class="bg-emerald-100/80 hover:bg-emerald-200 text-emerald-800 text-xs font-medium px-3 py-2 rounded-xl border border-emerald-200 transition-colors">
                         <i class="fa-solid fa-check-double"></i> සියල්ල පැමිණ ඇත
                     </button>
-                    <button onclick="markAllCurrentShift(false)" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-medium px-3 py-2 rounded-lg border border-rose-200 transition-colors">
+                    <button onclick="markAllCurrentShift(false)" class="bg-rose-100/80 hover:bg-rose-200 text-rose-800 text-xs font-medium px-3 py-2 rounded-xl border border-rose-200 transition-colors">
                         <i class="fa-solid fa-xmark"></i> සියල්ල ඉවත් කරන්න
                     </button>
                 </div>
             </div>
 
             <!-- Attendance List -->
-            <div class="bg-white rounded-xl shadow-sm border border-indigo-100 overflow-hidden">
-                <div class="px-4 py-3 bg-indigo-50 border-b border-indigo-100 flex justify-between items-center">
+            <div class="glass-card rounded-2xl overflow-hidden">
+                <div class="px-4 py-3 bg-indigo-50/80 border-b border-indigo-100 flex justify-between items-center">
                     <h3 class="text-xs font-bold text-indigo-900 uppercase tracking-wider flex items-center gap-2">
                         <span id="currentShiftTitleIndicator" class="text-sky-600"><i class="fa-solid fa-sun"></i> දිවා වැඩ මුරය</span> - පැමිණීමේ ලැයිස්තුව
                     </h3>
                     <span id="attendanceCount" class="text-xs text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-full font-bold">0 / 0</span>
                 </div>
-                <div id="attendanceListContainer" class="divide-y divide-slate-100">
+                <div id="attendanceListContainer" class="divide-y divide-slate-100/60">
                     <!-- Dynamic Items -->
                 </div>
             </div>
         </div>
 
-        <!-- TAB 2: EMPLOYEES (Emerald/Green Theme) -->
+        <!-- TAB 2: EMPLOYEES (Emerald Theme) -->
         <div id="tab-employees" class="hidden space-y-4">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-emerald-100 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-3">
                 <div class="relative w-full sm:w-72">
                     <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400 text-xs"></i>
-                    <input type="text" id="employeeSearchInput" oninput="renderEmployeesList()" placeholder="නම, අංකය හෝ NIC මඟින් සොයන්න..." class="w-full pl-9 pr-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <input type="text" id="employeeSearchInput" oninput="renderEmployeesList()" placeholder="නම, අංකය හෝ NIC මඟින් සොයන්න..." class="w-full pl-9 pr-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 </div>
                 <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                    <button onclick="openEmployeeModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-3.5 py-2 rounded-lg shadow-sm flex items-center gap-1.5 transition-colors">
+                    <button onclick="openEmployeeModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-3.5 py-2 rounded-xl shadow-sm flex items-center gap-1.5 transition-colors">
                         <i class="fa-solid fa-user-plus"></i> නව සේවකයෙක් එකතු කරන්න
                     </button>
-                    <button onclick="exportEmployeesCSV()" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-medium px-3.5 py-2 rounded-lg shadow-sm flex items-center gap-1.5 transition-colors" title="Export CSV">
+                    <button onclick="exportEmployeesCSV()" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-medium px-3.5 py-2 rounded-xl shadow-sm flex items-center gap-1.5 transition-colors" title="Export CSV">
                         <i class="fa-solid fa-file-excel"></i> CSV
                     </button>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border border-emerald-100 overflow-hidden">
-                <div class="px-4 py-3 bg-emerald-50 border-b border-emerald-100">
+            <div class="glass-card rounded-2xl overflow-hidden">
+                <div class="px-4 py-3 bg-emerald-50/80 border-b border-emerald-100">
                     <h3 class="text-xs font-bold text-emerald-900 uppercase tracking-wider">සේවක ලැයිස්තුව සහ පුද්ගලික තොරතුරු</h3>
                 </div>
-                <div id="employeesListContainer" class="divide-y divide-slate-100">
+                <div id="employeesListContainer" class="divide-y divide-slate-100/60">
                     <!-- Dynamic Employees -->
                 </div>
             </div>
@@ -115,18 +139,18 @@
 
         <!-- TAB 3: REPORTS (Purple Theme) -->
         <div id="tab-reports" class="hidden space-y-4">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-purple-100 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-3">
                 <div class="w-full sm:w-auto flex items-center gap-2">
-                    <label class="text-xs font-medium text-slate-500">මාසය තෝරන්න:</label>
-                    <input type="month" id="reportMonthSelect" onchange="renderReports()" class="px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <label class="text-xs font-medium text-slate-600">මාසය තෝරන්න:</label>
+                    <input type="month" id="reportMonthSelect" onchange="renderReports()" class="px-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-purple-500">
                 </div>
-                <button onclick="exportMonthlyReportCSV()" class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium px-4 py-2 rounded-lg shadow-sm flex items-center justify-center gap-1.5 transition-colors">
+                <button onclick="exportMonthlyReportCSV()" class="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium px-4 py-2 rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition-colors">
                     <i class="fa-solid fa-file-excel"></i> මාසික වාර්තාව CSV ලෙස Download කරන්න
                 </button>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border border-purple-100 overflow-hidden">
-                <div class="px-4 py-3 bg-purple-50 border-b border-purple-100">
+            <div class="glass-card rounded-2xl overflow-hidden">
+                <div class="px-4 py-3 bg-purple-50/80 border-b border-purple-100">
                     <h3 class="text-xs font-bold text-purple-900 uppercase tracking-wider">මාසික සාරාංශ වාර්තාව (දිවා සහ රාත්‍රි)</h3>
                 </div>
                 <div class="overflow-x-auto">
@@ -140,7 +164,7 @@
                                 <th class="p-3 font-semibold text-center text-emerald-700">මුළු දින</th>
                             </tr>
                         </thead>
-                        <tbody id="reportTableBody" class="divide-y divide-slate-100">
+                        <tbody id="reportTableBody" class="divide-y divide-slate-100/60">
                             <!-- Dynamic Report -->
                         </tbody>
                     </table>
@@ -148,30 +172,30 @@
             </div>
         </div>
 
-        <!-- TAB 4: SETTINGS (Slate Theme) -->
+        <!-- TAB 4: SETTINGS -->
         <div id="tab-settings" class="hidden space-y-4">
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 space-y-4">
-                <h3 class="text-sm font-bold text-slate-700 border-b pb-2 flex items-center gap-2">
+            <div class="glass-card p-5 rounded-2xl space-y-4">
+                <h3 class="text-sm font-bold text-slate-700 border-b border-slate-200 pb-2 flex items-center gap-2">
                     <i class="fa-solid fa-mobile-screen-button text-indigo-600"></i> දුරකථනයට App එක ස්ථාපනය කරගැනීම
                 </h3>
                 <p class="text-xs text-slate-600 leading-relaxed">
                     මෙම පද්ධතිය අන්තර්ජාලය නොමැතිව (Offline) වුවද ඔබගේ දුරකථනයෙන් පහසුවෙන් භාවිත කළ හැක. පහත බොත්තම ඔබා App එක ස්ථිරවම ඔබේ දුරකථනයට ලබාගත හැක.
                 </p>
-                <div class="pt-2">
-                    <button onclick="downloadAppFile()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow-md flex items-center gap-2 transition-transform active:scale-95">
+                <div>
+                    <button onclick="downloadAppFile()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md flex items-center gap-2 transition-transform active:scale-95">
                         <i class="fa-solid fa-download"></i> App ගොනුව (HTML) Download කරන්න
                     </button>
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-rose-100 space-y-3">
-                <h3 class="text-sm font-bold text-rose-600 border-b pb-2 flex items-center gap-2">
+            <div class="glass-card p-5 rounded-2xl space-y-3 border-rose-200">
+                <h3 class="text-sm font-bold text-rose-600 border-b border-rose-100 pb-2 flex items-center gap-2">
                     <i class="fa-solid fa-triangle-exclamation"></i> දත්ත කළමනාකරණය සහ යළි පිහිටුවීම
                 </h3>
                 <p class="text-xs text-slate-600">
-                    සියලුම සේවක දත්ත සහ පැමිණීම් ඉවත් කර මුල සිට ආරම්භ කිරීමට අවශ්‍ය නම් පහත බොත්තම භාවිත කරන්න.
+                    සියලුම සේවක දත්ත සහ පැමිණීම් ඉවත් කර මුල සිට ආරම්භ කිරීමට අවශ්‍ය නම් පමණක් පහත බොත්තම භාවිත කරන්න.
                 </p>
-                <button onclick="resetAllData()" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-medium px-3.5 py-2 rounded-lg border border-rose-200 transition-colors flex items-center gap-1.5">
+                <button onclick="resetAllData()" class="bg-rose-100/80 hover:bg-rose-200 text-rose-800 text-xs font-medium px-3.5 py-2 rounded-xl border border-rose-200 transition-colors flex items-center gap-1.5">
                     <i class="fa-solid fa-trash-can"></i> සියලු දත්ත මකා දමන්න (Reset All)
                 </button>
             </div>
@@ -180,9 +204,9 @@
     </main>
 
     <!-- Bottom Navigation Bar -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-40 px-2 py-1.5">
+    <nav class="fixed bottom-0 left-0 right-0 glass-nav shadow-lg z-40 px-2 py-1.5">
         <div class="max-w-4xl mx-auto flex justify-around items-center">
-            <button onclick="switchTab('attendance')" id="navBtn-attendance" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-indigo-600 bg-indigo-50 transition-all font-bold">
+            <button onclick="switchTab('attendance')" id="navBtn-attendance" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-indigo-600 bg-indigo-50/80 transition-all font-bold">
                 <i class="fa-solid fa-calendar-check text-base mb-0.5"></i>
                 <span class="text-[10px]">පැමිණීම</span>
             </button>
@@ -202,9 +226,9 @@
     </nav>
 
     <!-- EMPLOYEE ADD/EDIT MODAL -->
-    <div id="employeeModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
-            <div class="px-5 py-4 bg-emerald-50 border-b border-emerald-100 flex justify-between items-center">
+    <div id="employeeModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white/90 backdrop-blur-md w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-white/60">
+            <div class="px-5 py-4 bg-emerald-50/80 border-b border-emerald-100 flex justify-between items-center">
                 <h3 id="modalTitle" class="text-sm font-bold text-emerald-900">නව සේවකයෙක් එකතු කරන්න</h3>
                 <button onclick="closeEmployeeModal()" class="text-slate-400 hover:text-slate-600 text-sm"><i class="fa-solid fa-xmark"></i></button>
             </div>
@@ -212,52 +236,52 @@
                 <input type="hidden" id="editEmployeeId">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-500 mb-1">සම්පූර්ණ නම *</label>
-                        <input type="text" id="empName" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: එච්. එම්. පෙරේරා">
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">සම්පූර්ණ නම *</label>
+                        <input type="text" id="empName" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: එච්. එම්. පෙරේරා">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-500 mb-1">සේවක අංකය *</label>
-                        <input type="text" id="empNo" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: EMP001">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-500 mb-1">තනතුර</label>
-                        <input type="text" id="empRole" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: වැඩ පරීක්ෂක">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-500 mb-1">ජාතික හැඳුනුම්පත් අංකය (NIC)</label>
-                        <input type="text" id="empNic" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="NIC අංකය">
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">සේවක අංකය *</label>
+                        <input type="text" id="empNo" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: EMP001">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-500 mb-1">සේවය කරන වැඩ මුරය *</label>
-                        <select id="empShiftType" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">තනතුර</label>
+                        <input type="text" id="empRole" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: වැඩ පරීක්ෂක">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">ජාතික හැඳුනුම්පත් අංකය (NIC)</label>
+                        <input type="text" id="empNic" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="NIC අංකය">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">සේවය කරන වැඩ මුරය *</label>
+                        <select id="empShiftType" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                             <option value="both">දිවා සහ රාත්‍රි (Both)</option>
                             <option value="day">දිවා සේවය පමණයි</option>
                             <option value="night">රාත්‍රි සේවය පමණයි</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-500 mb-1">සේවයට බැඳුණු දිනය *</label>
-                        <input type="date" id="empJoinDate" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">සේවයට බැඳුණු දිනය *</label>
+                        <input type="date" id="empJoinDate" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-500 mb-1">දුරකථන අංකය</label>
-                        <input type="tel" id="empPhone" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="07XXXXXXXX">
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">දුරකථන අංකය</label>
+                        <input type="tel" id="empPhone" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="07XXXXXXXX">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-500 mb-1">හදිසි ඇමතුම් අංකය</label>
-                        <input type="text" id="empEmergency" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: බිරිඳ - 0712345678">
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">හදිසි ඇමතුම් අංකය</label>
+                        <input type="text" id="empEmergency" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: බිරිඳ - 0712345678">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-500 mb-1">රුධිර වර්ගය</label>
-                        <select id="empBlood" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">රුධිර වර්ගය</label>
+                        <select id="empBlood" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                             <option value="">තෝරන්න</option>
                             <option value="A+">A+</option><option value="A-">A-</option>
                             <option value="B+">B+</option><option value="B-">B-</option>
@@ -266,39 +290,39 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-500 mb-1">උපන් දිනය</label>
-                        <input type="date" id="empDob" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <label class="block text-[11px] font-medium text-slate-600 mb-1">උපන් දිනය</label>
+                        <input type="date" id="empDob" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] font-medium text-slate-500 mb-1">පදිංචි ලිපිනය</label>
-                    <textarea id="empAddress" rows="2" class="w-full px-3 py-2 border rounded-lg text-xs bg-slate-50 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="ලිපිනය"></textarea>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-1">පදිංචි ලිපිනය</label>
+                    <textarea id="empAddress" rows="2" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="ලිපිනය"></textarea>
                 </div>
             </div>
-            <div class="px-5 py-3 bg-slate-50 border-t border-slate-100 flex justify-end gap-2">
-                <button onclick="closeEmployeeModal()" class="px-3.5 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-200">අවලංගු කරන්න</button>
-                <button onclick="saveEmployee()" class="px-4 py-2 rounded-lg text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm">සුරකින්න</button>
+            <div class="px-5 py-3 bg-slate-50/80 border-t border-slate-100 flex justify-end gap-2">
+                <button onclick="closeEmployeeModal()" class="px-3.5 py-2 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-200">අවලංගු කරන්න</button>
+                <button onclick="saveEmployee()" class="px-4 py-2 rounded-xl text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm">සුරකින්න</button>
             </div>
         </div>
     </div>
 
     <!-- PROFILE MODAL -->
-    <div id="profileModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
+    <div id="profileModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white/90 backdrop-blur-md w-full max-w-md rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-white/60">
             <div class="px-5 py-4 bg-emerald-700 text-white flex justify-between items-center">
                 <h3 class="text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-id-badge"></i> සේවක පැතිකඩ</h3>
                 <button onclick="closeProfileModal()" class="text-emerald-200 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="profileContent" class="p-5 overflow-y-auto space-y-3 text-xs flex-1"></div>
-            <div class="px-5 py-3 bg-slate-50 border-t border-slate-100 flex justify-end">
-                <button onclick="closeProfileModal()" class="px-4 py-2 rounded-lg text-xs font-medium bg-slate-200 text-slate-700">වසන්න</button>
+            <div class="px-5 py-3 bg-slate-50/80 border-t border-slate-100 flex justify-end">
+                <button onclick="closeProfileModal()" class="px-4 py-2 rounded-xl text-xs font-medium bg-slate-200 text-slate-700">වසන්න</button>
             </div>
         </div>
     </div>
 
     <script>
-        const STORAGE_KEY_EMP = 'diyatalawa_hosp_emp_v3';
-        const STORAGE_KEY_ATT = 'diyatalawa_hosp_att_v3';
+        const STORAGE_KEY_EMP = 'diyatalawa_hosp_emp_glass_v1';
+        const STORAGE_KEY_ATT = 'diyatalawa_hosp_att_glass_v1';
 
         const defaultEmployees = [
             { id: '1', name: 'සමිත් මධුසංක', empNo: 'EMP001', role: 'වැඩ පරීක්ෂක', shiftType: 'both', joinDate: '2026-11-01', nic: '921920000V', phone: '0712345678', emergency: 'භාර්යාව - 0719876543', blood: 'O+', dob: '1992-07-10', address: 'දියතලාව' }
@@ -348,26 +372,26 @@
             const btn = document.getElementById(`navBtn-${tabName}`);
 
             if (tabName === 'attendance') {
-                header.className = "bg-indigo-700 text-white shadow-lg sticky top-0 z-40 transition-colors duration-300";
+                header.style.background = "rgba(79, 70, 229, 0.85)"; // Indigo
                 headerIcon.className = "fa-solid fa-calendar-check text-indigo-200";
                 headerTitleText.innerText = "පැමිණීමේ සටහන";
-                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-indigo-600 bg-indigo-50 transition-all font-bold";
+                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-indigo-600 bg-indigo-50/80 transition-all font-bold";
             } else if (tabName === 'employees') {
-                header.className = "bg-emerald-700 text-white shadow-lg sticky top-0 z-40 transition-colors duration-300";
+                header.style.background = "rgba(5, 150, 105, 0.85)"; // Emerald
                 headerIcon.className = "fa-solid fa-id-card text-emerald-200";
                 headerTitleText.innerText = "සේවක කළමනාකරණය";
-                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-emerald-600 bg-emerald-50 transition-all font-bold";
+                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-emerald-600 bg-emerald-50/80 transition-all font-bold";
             } else if (tabName === 'reports') {
-                header.className = "bg-purple-700 text-white shadow-lg sticky top-0 z-40 transition-colors duration-300";
+                header.style.background = "rgba(147, 51, 234, 0.85)"; // Purple
                 headerIcon.className = "fa-solid fa-chart-pie text-purple-200";
                 headerTitleText.innerText = "මාසික වාර්තා";
-                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-purple-600 bg-purple-50 transition-all font-bold";
+                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-purple-600 bg-purple-50/80 transition-all font-bold";
                 renderReports();
             } else if (tabName === 'settings') {
-                header.className = "bg-slate-800 text-white shadow-lg sticky top-0 z-40 transition-colors duration-300";
+                header.style.background = "rgba(51, 65, 85, 0.85)"; // Slate
                 headerIcon.className = "fa-solid fa-gear text-slate-300";
                 headerTitleText.innerText = "යෙදුම් සැකසුම්";
-                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-800 bg-slate-200 transition-all font-bold";
+                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-800 bg-slate-200/80 transition-all font-bold";
             }
         }
 
@@ -378,13 +402,13 @@
             const indicator = document.getElementById('currentShiftTitleIndicator');
 
             if (shift === 'day') {
-                dayBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-md bg-sky-600 text-white shadow-sm flex items-center justify-center gap-1.5";
-                nightBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-md text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5";
+                dayBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg bg-sky-600 text-white shadow-sm flex items-center justify-center gap-1.5";
+                nightBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5";
                 indicator.className = "text-sky-600";
                 indicator.innerHTML = `<i class="fa-solid fa-sun"></i> දිවා වැඩ මුරය`;
             } else {
-                nightBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-md bg-purple-600 text-white shadow-sm flex items-center justify-center gap-1.5";
-                dayBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-md text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5";
+                nightBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg bg-purple-600 text-white shadow-sm flex items-center justify-center gap-1.5";
+                dayBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5";
                 indicator.className = "text-purple-600";
                 indicator.innerHTML = `<i class="fa-solid fa-moon"></i> රාත්‍රි වැඩ මුරය`;
             }
@@ -422,7 +446,7 @@
                 if (isPresent) presentCount++;
 
                 const div = document.createElement('div');
-                div.className = "px-4 py-3 flex items-center justify-between hover:bg-slate-50/80 transition-colors";
+                div.className = "px-4 py-3 flex items-center justify-between hover:bg-white/40 transition-colors";
                 div.innerHTML = `
                     <div class="flex items-center gap-3">
                         <button onclick="toggleCurrentShift('${selectedDate}', '${emp.id}')" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all shadow-sm ${isPresent ? 'bg-emerald-100 text-emerald-700 border border-emerald-300' : 'bg-rose-100 text-rose-700 border border-rose-300'}">
@@ -436,7 +460,7 @@
                             </div>
                         </div>
                     </div>
-                    <button onclick="toggleCurrentShift('${selectedDate}', '${emp.id}')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${isPresent ? (currentShift === 'day' ? 'bg-sky-600 text-white shadow-sm' : 'bg-purple-600 text-white shadow-sm') : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                    <button onclick="toggleCurrentShift('${selectedDate}', '${emp.id}')" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${isPresent ? (currentShift === 'day' ? 'bg-sky-600 text-white shadow-sm' : 'bg-purple-600 text-white shadow-sm') : 'bg-white/80 text-slate-600 hover:bg-white border border-slate-200'}">
                         ${isPresent ? '<i class="fa-solid fa-check"></i> පැමිණ ඇත' : 'නොපැමිණි'}
                     </button>
                 `;
@@ -484,7 +508,7 @@
 
             filtered.forEach(emp => {
                 const div = document.createElement('div');
-                div.className = "px-4 py-3 flex items-center justify-between hover:bg-slate-50/80 transition-colors";
+                div.className = "px-4 py-3 flex items-center justify-between hover:bg-white/40 transition-colors";
                 div.innerHTML = `
                     <div class="flex items-center gap-3 cursor-pointer" onclick="viewProfile('${emp.id}')">
                         <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">${emp.name.charAt(0)}</div>
@@ -494,9 +518,9 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5">
-                        ${emp.phone ? `<a href="tel:${extractPhone(emp.phone)}" class="bg-emerald-50 text-emerald-700 text-xs px-2.5 py-1.5 rounded-lg border border-emerald-200"><i class="fa-solid fa-phone"></i></a>` : ''}
-                        <button onclick="editEmployee('${emp.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs px-2.5 py-1.5 rounded-lg"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteEmployee('${emp.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs px-2.5 py-1.5 rounded-lg"><i class="fa-solid fa-trash"></i></button>
+                        ${emp.phone ? `<a href="tel:${extractPhone(emp.phone)}" class="bg-emerald-50 text-emerald-700 text-xs px-2.5 py-1.5 rounded-xl border border-emerald-200"><i class="fa-solid fa-phone"></i></a>` : ''}
+                        <button onclick="editEmployee('${emp.id}')" class="bg-white/80 hover:bg-white text-slate-700 text-xs px-2.5 py-1.5 rounded-xl border border-slate-200"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteEmployee('${emp.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs px-2.5 py-1.5 rounded-xl border border-rose-200"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -627,7 +651,7 @@
                     }
                 }
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-purple-50/50 border-b border-purple-100";
+                tr.className = "hover:bg-white/40 border-b border-purple-100/60";
                 tr.innerHTML = `
                     <td class="p-3 font-semibold text-slate-800">${emp.name}</td>
                     <td class="p-3 text-center text-slate-500">${emp.empNo}</td>
