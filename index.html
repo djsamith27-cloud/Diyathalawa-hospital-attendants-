@@ -194,8 +194,8 @@
                     <table class="w-full text-left border-collapse text-xs">
                         <thead>
                             <tr class="bg-purple-100/60 dark:bg-purple-900/50 text-purple-900 dark:text-purple-200 border-b border-purple-200 dark:border-purple-800">
-                                <th class="p-3 font-semibold">සේවකයා</th>
                                 <th class="p-3 font-semibold text-center">අංකය</th>
+                                <th class="p-3 font-semibold">සේවකයා</th>
                                 <th class="p-3 font-semibold text-center text-emerald-700 dark:text-emerald-300">පැමිණි (Present)</th>
                                 <th class="p-3 font-semibold text-center text-rose-700 dark:text-rose-300">නොපැමිණි (Absent)</th>
                                 <th class="p-3 font-semibold text-center text-amber-700 dark:text-amber-300">නිවාඩු (Leave)</th>
@@ -372,7 +372,18 @@
         let lockedDates = JSON.parse(localStorage.getItem(STORAGE_KEY_LOCK)) || {};
         let currentShift = 'day';
 
+        // Helper function to sort employees by EMP number naturally (e.g. EMP1, EMP2, EMP10)
+        function sortEmployeesByEmpNo(arr) {
+            return arr.sort((a, b) => {
+                const numA = parseInt((a.empNo || '').replace(/\D/g, '')) || 0;
+                const numB = parseInt((b.empNo || '').replace(/\D/g, '')) || 0;
+                if (numA !== numB) return numA - numB;
+                return (a.empNo || '').localeCompare(b.empNo || '');
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            sortEmployeesByEmpNo(employees);
             const now = new Date();
             const todayStr = now.toISOString().split('T')[0];
             const year = now.getFullYear();
@@ -486,6 +497,7 @@
 
         // --- ATTENDANCE & LOCK ---
         function loadAttendanceData() {
+            sortEmployeesByEmpNo(employees);
             const selectedDate = document.getElementById('attendanceDate').value;
             const container = document.getElementById('attendanceListContainer');
             if (!container) return;
@@ -536,7 +548,7 @@
                             ${getStatusIcon(status)}
                         </div>
                         <div>
-                            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200">${emp.name} <span class="text-[9px] text-slate-400 font-normal">(${emp.empNo})</span></h4>
+                            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200">${emp.name} <span class="text-[10px] bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 px-1.5 py-0.5 rounded font-mono ml-1">${emp.empNo}</span></h4>
                             <div class="flex items-center gap-2 mt-0.5">
                                 <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">${emp.role || 'සේවක'}</span>
                                 ${emp.phone ? `<a href="tel:${extractPhone(emp.phone)}" class="text-[10px] text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"><i class="fa-solid fa-phone"></i> ${emp.phone}</a>` : ''}
@@ -646,6 +658,7 @@
 
         // --- EMPLOYEES ---
         function renderEmployeesList() {
+            sortEmployeesByEmpNo(employees);
             const search = document.getElementById('employeeSearchInput')?.value.toLowerCase() || '';
             const container = document.getElementById('employeesListContainer');
             if (!container) return;
@@ -665,7 +678,7 @@
                         <div class="w-9 h-9 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold text-xs">${emp.name.charAt(0)}</div>
                         <div>
                             <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200">${emp.name} <span class="text-[10px] text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded ml-1">${emp.role || 'සේවක'}</span></h4>
-                            <span class="text-[10px] text-slate-500">අංකය: <b>${emp.empNo}</b> | බැඳුණු දිනය: <b>${emp.joinDate || '-'}</b></span>
+                            <span class="text-[10px] text-slate-500">අංකය: <b class="font-mono text-indigo-600 dark:text-indigo-400">${emp.empNo}</b> | බැඳුණු දිනය: <b>${emp.joinDate || '-'}</b></span>
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5">
@@ -702,7 +715,15 @@
                 ['empName', 'empNo', 'empRole', 'empNic', 'empPhone', 'empEmergency', 'empBlood', 'empDob', 'empAddress'].forEach(i => document.getElementById(i).value = '');
                 document.getElementById('empShiftType').value = 'both';
                 document.getElementById('empJoinDate').value = defaultJoin;
-                document.getElementById('empNo').value = 'EMP0' + (employees.length + 1);
+                
+                // Auto generate next EMP No based on sorted list
+                let nextNum = 1;
+                if(employees.length > 0) {
+                    const lastEmp = employees[employees.length - 1];
+                    const extracted = parseInt((lastEmp.empNo || '').replace(/\D/g, '')) || employees.length;
+                    nextNum = extracted + 1;
+                }
+                document.getElementById('empNo').value = 'EMP' + String(nextNum).padStart(3, '0');
             }
             document.getElementById('employeeModal').classList.remove('hidden');
         }
@@ -741,6 +762,7 @@
                 employees.push(empData);
             }
 
+            sortEmployeesByEmpNo(employees);
             saveToStorage();
             closeEmployeeModal();
             renderEmployeesList();
@@ -752,6 +774,7 @@
         function deleteEmployee(id) {
             if (confirm('මෙම සේවකයා ඉවත් කිරීමට අවශ්‍ය බව ස්ථිරද?')) {
                 employees = employees.filter(e => e.id !== id);
+                sortEmployeesByEmpNo(employees);
                 saveToStorage();
                 renderEmployeesList();
                 loadAttendanceData();
@@ -764,7 +787,7 @@
             document.getElementById('profileContent').innerHTML = `
                 <div class="text-center pb-3 border-b dark:border-slate-800">
                     <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm">${emp.name}</h4>
-                    <p class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">${emp.role || 'සේවක'} (${emp.empNo})</p>
+                    <p class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">${emp.role || 'සේවක'} (<span class="font-mono">${emp.empNo}</span>)</p>
                 </div>
                 <div class="space-y-1.5 text-xs">
                     <p><b>බැඳුණු දිනය:</b> ${emp.joinDate || '-'}</p>
@@ -782,6 +805,7 @@
 
         // --- REPORTS ---
         function renderReports() {
+            sortEmployeesByEmpNo(employees);
             const monthInput = document.getElementById('reportMonthSelect').value;
             const tbody = document.getElementById('reportTableBody');
             if (!tbody || !monthInput) return;
@@ -808,8 +832,8 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-white/40 dark:hover:bg-slate-800/40 border-b border-purple-100/60 dark:border-slate-800";
                 tr.innerHTML = `
+                    <td class="p-3 text-center font-mono font-bold text-indigo-700 dark:text-indigo-400">${emp.empNo}</td>
                     <td class="p-3 font-semibold text-slate-800 dark:text-slate-200">${emp.name}</td>
-                    <td class="p-3 text-center text-slate-500">${emp.empNo}</td>
                     <td class="p-3 text-center font-bold text-emerald-700 dark:text-emerald-400">${presentCount}</td>
                     <td class="p-3 text-center font-bold text-rose-700 dark:text-rose-400">${absentCount}</td>
                     <td class="p-3 text-center font-bold text-amber-700 dark:text-amber-400">${leaveCount}</td>
@@ -824,7 +848,7 @@
             if (!monthStr) return;
             const [year, month] = monthStr.split('-').map(Number);
             const daysInMonth = new Date(year, month, 0).getDate();
-            let csv = "\uFEFFසේවකයා,සේවක අංකය,පැමිණි වාර,නොපැමිණි වාර,නිවාඩු වාර\n";
+            let csv = "\uFEFFසේවක අංකය,සේවකයා,පැමිණි වාර,නොපැමිණි වාර,නිවාඩු වාර\n";
             employees.forEach(emp => {
                 let presentCount = 0, absentCount = 0, leaveCount = 0;
                 for (let day = 1; day <= daysInMonth; day++) {
@@ -839,15 +863,15 @@
                         });
                     }
                 }
-                csv += `"${emp.name}","${emp.empNo}",${presentCount},${absentCount},${leaveCount}\n`;
+                csv += `"${emp.empNo}","${emp.name}",${presentCount},${absentCount},${leaveCount}\n`;
             });
             downloadFile(csv, `Attendance_Report_${monthStr}.csv`, 'text/csv;charset=utf-8;');
         }
 
         function exportEmployeesCSV() {
-            let csv = "\uFEFFනම,සේවක අංකය,තනතුර,NIC,දුරකථන,ලිපිනය\n";
+            let csv = "\uFEFFසේවක අංකය,නම,තනතුර,NIC,දුරකථන,ලිපිනය\n";
             employees.forEach(e => {
-                csv += `"${e.name}","${e.empNo}","${e.role || ''}","${e.nic || ''}","${e.phone || ''}","${e.address || ''}"\n`;
+                csv += `"${e.empNo}","${e.name}","${e.role || ''}","${e.nic || ''}","${e.phone || ''}","${e.address || ''}"\n`;
             });
             downloadFile(csv, `Employees_List.csv`, 'text/csv;charset=utf-8;');
         }
@@ -874,6 +898,7 @@
                     const parsed = JSON.parse(e.target.result);
                     if (parsed.employees && parsed.attendance) {
                         employees = parsed.employees;
+                        sortEmployeesByEmpNo(employees);
                         attendance = parsed.attendance;
                         lockedDates = parsed.lockedDates || {};
                         saveToStorage();
