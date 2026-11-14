@@ -1,0 +1,27 @@
+{
+  "employees": [
+    {
+      "id": "1",
+      "name": "සමිත් මධුසංක",
+      "empNo": "EMP001",
+      "role": "වැඩ පරීක්ෂක",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "921920000V",
+      "phone": "0712345678",
+      "emergency": "භාර්යාව - 0719876543",
+      "blood": "O+",
+      "dob": "1992-07-10",
+      "address": "දියතලාව"
+    }
+  ],
+  "attendance": {
+    "2026-11-14": {
+      "1": {
+        "day": "present",
+        "night": "present"
+      }
+    }
+  },
+  "lockedDates": {}
+}
