@@ -429,23 +429,23 @@
       },
       "1794640016520": {
         "day": "leave",
-        "night": "present"
+        "night": "leave"
       },
       "1794641368301": {
         "day": "present",
-        "night": "present"
+        "night": "leave"
       },
       "1794641382107": {
         "day": "present",
-        "night": "present"
+        "night": "leave"
       },
       "1794641398841": {
         "day": "leave",
-        "night": "present"
+        "night": "leave"
       },
       "1794641468918": {
         "day": "present",
-        "night": "present"
+        "night": "leave"
       },
       "1794641494857": {
         "day": "present",
@@ -469,31 +469,31 @@
       },
       "1794641666467": {
         "day": "leave",
-        "night": "present"
+        "night": "absent"
       },
       "1794641685470": {
         "day": "leave",
-        "night": "present"
+        "night": "absent"
       },
       "1794641711092": {
         "day": "present",
-        "night": "present"
+        "night": "absent"
       },
       "1794641735236": {
         "day": "present",
-        "night": "present"
+        "night": "absent"
       },
       "1794641754805": {
         "day": "present",
-        "night": "present"
+        "night": "absent"
       },
       "1794641776296": {
         "day": "present",
-        "night": "present"
+        "night": "absent"
       },
       "1794641793342": {
         "day": "present",
-        "night": "present"
+        "night": "absent"
       },
       "1794641811516": {
         "day": "present",
@@ -501,47 +501,47 @@
       },
       "1794641889067": {
         "day": "present",
-        "night": "present"
+        "night": "absent"
       },
       "1794641904073": {
         "day": "present",
-        "night": "present"
+        "night": "absent"
       },
       "1794641924594": {
         "day": "leave",
-        "night": "present"
+        "night": "leave"
       },
       "1794641957190": {
         "day": "present",
-        "night": "present"
+        "night": "absent"
       },
       "1794642029104": {
         "day": "present",
-        "night": "present"
+        "night": "absent"
       },
       "1794642054742": {
         "day": "leave",
-        "night": "present"
+        "night": "absent"
       },
       "1794642153544": {
         "day": "present",
-        "night": "present"
+        "night": "absent"
       },
       "1794642173845": {
         "day": "leave",
-        "night": "present"
+        "night": "absent"
       },
       "1794642190427": {
         "day": "leave",
-        "night": "present"
+        "night": "absent"
       },
       "1794644226153": {
         "day": "leave",
-        "night": "present"
+        "night": "leave"
       },
       "1794644777484": {
         "day": "present",
-        "night": "present"
+        "night": "absent"
       }
     },
     "2026-11-01": {
@@ -1160,6 +1160,7 @@
     "2026-11-02": true,
     "2026-11-03": true,
     "2026-11-04": true,
-    "2026-11-05": true
+    "2026-11-05": true,
+    "2026-11-14": true
   }
 }
