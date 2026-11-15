@@ -1,0 +1,1289 @@
+{
+  "employees": [
+    {
+      "id": "1",
+      "name": "ටී.පී.සමිත් මදුසංක පීරිස්",
+      "empNo": "EMP001",
+      "role": "ප්‍රධාන වැඩ පරීක්ෂක",
+      "shiftType": "both",
+      "joinDate": "2017-08-21",
+      "nic": "921922493v",
+      "phone": "0721755051",
+      "emergency": "",
+      "blood": "O+",
+      "dob": "1992-07-10",
+      "address": "නො17,නෙලුම්ගම,බදුල්ල"
+    },
+    {
+      "id": "1794640016520",
+      "name": "පී.බී.සමන්ත බන්ඩාර ජයතිලක",
+      "empNo": "EMP02",
+      "role": "වැඩ පරීක්ෂක",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641368301",
+      "name": "ආර්.එම්.කාන්ති",
+      "empNo": "EMP03",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641382107",
+      "name": "එස්.වයලට්",
+      "empNo": "EMP04",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641924594",
+      "name": "එස්.වී.සුනීතා",
+      "empNo": "EMP05",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641398841",
+      "name": "එස්.එම්.අමරාවති",
+      "empNo": "EMP06",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794644226153",
+      "name": "ඩබ්පිව්.මාලනී",
+      "empNo": "EMP07",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641468918",
+      "name": "ඩී.පී.ප්‍රියන්තිකා",
+      "empNo": "EMP08",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641494857",
+      "name": "පී.එම්.චමිලා ජීවන්ති",
+      "empNo": "EMP09",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641583420",
+      "name": "ඒ.ජී.⁣පේමාවතී",
+      "empNo": "EMP10",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641615121",
+      "name": "පී.එම්.ක්‍රිශාන්ති නිල්මිණි",
+      "empNo": "EMP11",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641629143",
+      "name": "ජේ.එස්.මාලනී",
+      "empNo": "EMP12",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641644238",
+      "name": "පී.ජේසුදාස්",
+      "empNo": "EMP13",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641666467",
+      "name": "ඩබ්ලිව්.ප්‍රදීප් කුමාර",
+      "empNo": "EMP14",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641889067",
+      "name": "ඩී.ජී.පොඩිමහත්තයා",
+      "empNo": "EMP15",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641904073",
+      "name": "එස්.වී.නිමාලි",
+      "empNo": "EMP16",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641685470",
+      "name": "එස්.ජේ.එම්.නදීකා",
+      "empNo": "EMP17",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641711092",
+      "name": "එච්.එම්.සුදුමැණිකා",
+      "empNo": "EMP18",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641735236",
+      "name": "ඩී.එම්.ඩිංගිරිමැණිකා",
+      "empNo": "EMP19",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641957190",
+      "name": "ආර්.ඩී.ප්‍රියන්තිමාලා",
+      "empNo": "EMP20",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641754805",
+      "name": "ටී.එම්.ආරියවතී",
+      "empNo": "EMP21",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641776296",
+      "name": "ඩබ්ලිව්.ජී.කාන්ති",
+      "empNo": "EMP22",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794642029104",
+      "name": "ඩී.එම්.ශාන්ති",
+      "empNo": "EMP23",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794642054742",
+      "name": "එන්.ඉන්සාන්",
+      "empNo": "EMP24",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794642153544",
+      "name": "එච්.එම්.සිරියාවතී",
+      "empNo": "EMP25",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794644777484",
+      "name": "ආර්.එම්.චාන්දනී",
+      "empNo": "EMP26",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641793342",
+      "name": "එච්.එම්.චන්ද්‍රාවතී",
+      "empNo": "EMP27",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794641811516",
+      "name": "ඩබ්ලිව්.එම්.කානචනා",
+      "empNo": "EMP28",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794642173845",
+      "name": "එස්.ලලිතා",
+      "empNo": "EMP29",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    },
+    {
+      "id": "1794642190427",
+      "name": "එස්.එම්.චතුරාණි",
+      "empNo": "EMP30",
+      "role": "",
+      "shiftType": "both",
+      "joinDate": "2026-11-01",
+      "nic": "",
+      "phone": "",
+      "emergency": "",
+      "blood": "",
+      "dob": "",
+      "address": ""
+    }
+  ],
+  "attendance": {
+    "2026-11-14": {
+      "1": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794640016520": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641368301": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641382107": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641398841": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641468918": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641494857": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641583420": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641615121": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794641629143": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641644238": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641666467": {
+        "day": "leave",
+        "night": "absent"
+      },
+      "1794641685470": {
+        "day": "leave",
+        "night": "absent"
+      },
+      "1794641711092": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794641735236": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794641754805": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794641776296": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794641793342": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794641811516": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641889067": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794641904073": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794641924594": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641957190": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794642029104": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794642054742": {
+        "day": "leave",
+        "night": "absent"
+      },
+      "1794642153544": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794642173845": {
+        "day": "leave",
+        "night": "absent"
+      },
+      "1794642190427": {
+        "day": "leave",
+        "night": "absent"
+      },
+      "1794644226153": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794644777484": {
+        "day": "present",
+        "night": "absent"
+      }
+    },
+    "2026-11-01": {
+      "1": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794640016520": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641368301": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641382107": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641398841": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641468918": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641494857": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641583420": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641615121": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641629143": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641644238": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641666467": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641685470": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641711092": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641735236": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641754805": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641776296": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641793342": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641811516": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641889067": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641904073": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641924594": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641957190": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794642029104": {
+        "day": "absent",
+        "night": "leave"
+      },
+      "1794642054742": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794642153544": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794642173845": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794642190427": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794644226153": {
+        "day": "absent",
+        "night": "present"
+      },
+      "1794644777484": {
+        "day": "leave",
+        "night": "present"
+      }
+    },
+    "2026-11-02": {
+      "1": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794640016520": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641368301": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641382107": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641398841": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641468918": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641494857": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641583420": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641615121": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794641629143": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641644238": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641666467": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641685470": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641711092": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641735236": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641754805": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641776296": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641793342": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641811516": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641889067": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641904073": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641924594": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641957190": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794642029104": {
+        "day": "absent",
+        "night": "leave"
+      },
+      "1794642054742": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794642153544": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794642173845": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794642190427": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794644226153": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794644777484": {
+        "day": "present",
+        "night": "leave"
+      }
+    },
+    "2026-11-03": {
+      "1": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794640016520": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641368301": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641382107": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641924594": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641398841": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794644226153": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641468918": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641494857": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641583420": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641615121": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641629143": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641644238": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641666467": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641889067": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794641904073": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641685470": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641711092": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641735236": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641957190": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641754805": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641776296": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794642029104": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794642054742": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794642153544": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794644777484": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641793342": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641811516": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794642173845": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794642190427": {
+        "day": "leave",
+        "night": "leave"
+      }
+    },
+    "2026-11-04": {
+      "1": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794640016520": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641368301": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641382107": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641924594": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641398841": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794644226153": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641468918": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641494857": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641583420": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641615121": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641629143": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641644238": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641666467": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641889067": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641904073": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641685470": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794641711092": {
+        "day": "leave",
+        "night": "absent"
+      },
+      "1794641735236": {
+        "day": "leave",
+        "night": "absent"
+      },
+      "1794641957190": {
+        "day": "leave",
+        "night": "absent"
+      },
+      "1794641754805": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641776296": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794642029104": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794642054742": {
+        "day": "leave",
+        "night": "absent"
+      },
+      "1794642153544": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794644777484": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794641793342": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641811516": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794642173845": {
+        "day": "present",
+        "night": "absent"
+      },
+      "1794642190427": {
+        "day": "present",
+        "night": "absent"
+      }
+    },
+    "2026-11-05": {
+      "1": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794640016520": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641368301": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641382107": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794641924594": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641398841": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794644226153": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641468918": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641494857": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641583420": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641615121": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641629143": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641644238": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641666467": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641889067": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641904073": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641685470": {
+        "day": "absent",
+        "night": "present"
+      },
+      "1794641711092": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641735236": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641957190": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641754805": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641776296": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794642029104": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794642054742": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794642153544": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794644777484": {
+        "day": "leave",
+        "night": "leave"
+      },
+      "1794641793342": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794641811516": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794642173845": {
+        "day": "present",
+        "night": "leave"
+      },
+      "1794642190427": {
+        "day": "present",
+        "night": "leave"
+      }
+    },
+    "2026-11-15": {
+      "1": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794640016520": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641368301": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794641382107": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641924594": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641398841": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794644226153": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794641468918": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794641494857": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641583420": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641615121": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641629143": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641644238": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641666467": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641889067": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794641904073": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641685470": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794641711092": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794641735236": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641957190": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641754805": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641776296": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794642029104": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794642054742": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794642153544": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794644777484": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794641793342": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794641811516": {
+        "day": "present",
+        "night": "present"
+      },
+      "1794642173845": {
+        "day": "leave",
+        "night": "present"
+      },
+      "1794642190427": {
+        "day": "leave",
+        "night": "present"
+      }
+    }
+  },
+  "lockedDates": {
+    "2026-11-01": true,
+    "2026-11-02": true,
+    "2026-11-03": true,
+    "2026-11-04": true,
+    "2026-11-05": true,
+    "2026-11-14": true,
+    "2026-11-15": true
+  }
+}
