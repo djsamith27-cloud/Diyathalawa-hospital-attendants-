@@ -1,0 +1,8 @@
+{
+  "name": "පැමිණීම",
+  "description": "සේවක පැමිණීමේ සහ නොපැමිණීමේ කළමනාකරණය - පවිත්‍රතා අංශය, මූලික රෝහල, දියතලාව",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

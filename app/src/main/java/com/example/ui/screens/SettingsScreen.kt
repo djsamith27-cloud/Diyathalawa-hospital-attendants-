@@ -1,0 +1,229 @@
+package com.example.ui.screens
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CloudDownload
+import androidx.compose.material.icons.filled.CloudUpload
+import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.PhoneAndroid
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.dp
+import com.example.ui.components.GlassCard
+import com.example.ui.theme.LocalAttendanceColors
+
+@Composable
+fun SettingsScreen(
+    onBackupClick: () -> Unit,
+    onRestoreClick: () -> Unit,
+    onConfirmResetAll: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val semantic = LocalAttendanceColors.current
+    var showResetConfirm by remember { mutableStateOf(false) }
+
+    if (showResetConfirm) {
+        AlertDialog(
+            onDismissRequest = { showResetConfirm = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Filled.Warning,
+                    contentDescription = null,
+                    tint = semantic.absent
+                )
+            },
+            title = {
+                Text(
+                    text = "සියලු දත්ත මකා දැමීම",
+                    style = MaterialTheme.typography.titleMedium
+                )
+            },
+            text = {
+                Text(
+                    text = "සියලුම සේවක සහ පැමිණීමේ දත්ත මකා දැමීමට අවශ්‍ය බව ස්ථිරද? මෙය නැවත ලබාගත නොහැක!",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showResetConfirm = false
+                        onConfirmResetAll()
+                    }
+                ) {
+                    Text("මකා දමන්න", color = semantic.absent)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetConfirm = false }) {
+                    Text("අවලංගු කරන්න")
+                }
+            }
+        )
+    }
+
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        // Offline App Info & Backup/Restore Card
+        item {
+            GlassCard {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.PhoneAndroid,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Text(
+                            text = "දුරකථනයේ Offline භාවිතය සහ දත්ත ආරක්ෂණය",
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                    }
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
+                    Text(
+                        text = "මෙම පද්ධතිය අන්තර්ජාලය නොමැතිව (Offline) වුවද ඔබගේ දුරකථනයෙන් පහසුවෙන් භාවිත කළ හැක. සියලුම දත්ත ආරක්ෂිතව දුරකථනය තුළ සුරැකේ. අවශ්‍ය විටෙක JSON Backup ගොනුවක් ලෙස ලබාගැනීමට හෝ Restore කිරීමට පහත බොත්තම් භාවිත කරන්න.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Button(
+                            onClick = onBackupClick,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .minimumInteractiveComponentSize()
+                                .testTag("settings_backup_button")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.CloudDownload,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Backup JSON", style = MaterialTheme.typography.labelLarge)
+                        }
+
+                        OutlinedButton(
+                            onClick = onRestoreClick,
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .minimumInteractiveComponentSize()
+                                .testTag("settings_restore_button")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.CloudUpload,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Restore JSON", style = MaterialTheme.typography.labelLarge)
+                        }
+                    }
+                }
+            }
+        }
+
+        // Danger Zone: Reset All Data
+        item {
+            GlassCard(borderColor = semantic.absent.copy(alpha = 0.35f)) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Warning,
+                            contentDescription = null,
+                            tint = semantic.absent,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Text(
+                            text = "දත්ත කළමනාකරණය සහ යළි පිහිටුවීම",
+                            style = MaterialTheme.typography.titleSmall,
+                            color = semantic.absent
+                        )
+                    }
+                    HorizontalDivider(color = semantic.absent.copy(alpha = 0.25f))
+                    Text(
+                        text = "සියලුම සේවක දත්ත සහ පැමිණීම් ඉවත් කර මුල සිට ආරම්භ කිරීමට අවශ්‍ය නම් පමණක් පහත බොත්තම භාවිත කරන්න.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Surface(
+                        onClick = { showResetConfirm = true },
+                        shape = RoundedCornerShape(12.dp),
+                        color = semantic.absentContainer,
+                        border = BorderStroke(1.dp, semantic.absent.copy(alpha = 0.45f)),
+                        modifier = Modifier
+                            .minimumInteractiveComponentSize()
+                            .testTag("reset_all_button")
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.DeleteForever,
+                                contentDescription = null,
+                                tint = semantic.onAbsentContainer,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Text(
+                                text = "සියලු දත්ත මකා දමන්න (Reset All)",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = semantic.onAbsentContainer
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

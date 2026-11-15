@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">පැමිණීම</string>
+    <string name="hospital_division_subtitle">පවිත්‍රතා අංශය, මූලික රෝහල, දියතලාව</string>
+    <string name="tab_attendance_title">පැමිණීම සහ නොපැමිණීම</string>
+    <string name="tab_employees_title">සේවක කළමනාකරණය</string>
+    <string name="tab_reports_title">මාසික වාර්තා</string>
+    <string name="tab_settings_title">යෙදුම් සැකසුම්</string>
+    <string name="nav_attendance">පැමිණීම</string>
+    <string name="nav_employees">සේවකයන්</string>
+    <string name="nav_reports">වාර්තා</string>
+    <string name="nav_settings">සැකසුම්</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+    <string name="cd_toggle_theme">තේමාව මාරු කරන්න</string>
+    <string name="cd_backup">දත්ත Backup කරන්න</string>
+    <string name="cd_restore">දත්ත Restore කරන්න</string>
+    <string name="cd_close">වසන්න</string>
+    <string name="cd_call_employee">දුරකථන ඇමතුමක් ගන්න</string>
+    <string name="cd_edit_employee">සේවක තොරතුරු සංස්කරණය කරන්න</string>
+    <string name="cd_delete_employee">සේවකයා ඉවත් කරන්න</string>
+    <string name="cd_prev_month">පෙර මාසය</string>
+    <string name="cd_next_month">ඊළඟ මාසය</string>
+    <string name="cd_select_date">දිනය තෝරන්න</string>
+</resources>
