@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap');
-        body { 
-            font-family: 'Noto Sans Sinhala', sans-serif; 
+        body {
+            font-family: 'Noto Sans Sinhala', sans-serif;
             min-height: 100vh;
             transition: background 0.3s ease, color 0.3s ease;
         }
-        .light body { background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); }
-        .dark body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        .light body { background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); color: #1e293b; }
+        .dark body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #f8fafc; }
 
         .glass-header {
             backdrop-filter: blur(12px);
@@ -22,26 +22,35 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
         .light .glass-card {
-            background: rgba(255, 255, 255, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.75);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            color: #1e293b;
         }
         .dark .glass-card {
-            background: rgba(30, 41, 59, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            background: rgba(30, 41, 59, 0.94);
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
             color: #f8fafc;
         }
         .light .glass-nav {
-            background: rgba(255, 255, 255, 0.85);
-            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.92);
+            border-top: 1px solid rgba(226, 232, 240, 0.9);
         }
         .dark .glass-nav {
-            background: rgba(15, 23, 42, 0.85);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(15, 23, 42, 0.96);
+            border-top: 1px solid rgba(148, 163, 184, 0.22);
         }
 
-        /* Smooth Tab & Click Animations */
+        .dark input, .dark select, .dark textarea {
+            color: #f8fafc !important;
+            color-scheme: dark;
+        }
+        .dark select option {
+            background-color: #1e293b;
+            color: #f8fafc;
+        }
+
         @keyframes fadeInScale {
             from {
                 opacity: 0;
@@ -61,7 +70,7 @@
             transition: transform 0.15s ease, background-color 0.2s ease, opacity 0.2s ease;
         }
         button:active, label:active {
-            transform: scale(0.95);
+            transform: scale(0.96);
         }
     </style>
     <script>
@@ -71,27 +80,28 @@
 <body class="text-slate-800 dark:text-slate-100 min-h-screen pb-24">
 
     <!-- Header -->
-    <header id="appHeader" class="glass-header bg-indigo-700/90 text-white shadow-lg sticky top-0 z-40 transition-colors duration-300">
+    <header id="appHeader" class="glass-header bg-indigo-700/95 text-white shadow-lg sticky top-0 z-40 transition-colors duration-300">
         <div class="max-w-4xl mx-auto px-4 py-3.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div>
                 <h1 class="text-base sm:text-lg font-bold flex items-center gap-2">
-                    <i id="headerIcon" class="fa-solid fa-calendar-check text-indigo-200"></i> <span id="headerTitleText">පැමිණීම සහ නොපැමිණීම</span>
+                    <i id="headerIcon" class="fa-solid fa-calendar-check text-indigo-200"></i>
+                    <span id="headerTitleText">පැමිණීම සහ නොපැමිණීම</span>
                 </h1>
                 <p class="text-xs font-medium text-white/90 mt-0.5">පවිත්‍රතා අංශය, මූලික රෝහල, දියතලාව</p>
                 <p class="text-[11px] text-white/80 mt-0.5 font-mono" id="currentDateTimeDisplay"></p>
             </div>
-            
+
             <div class="flex items-center gap-2 self-end sm:self-center">
-                <button onclick="toggleTheme()" class="bg-white/20 hover:bg-white/30 text-xs px-3 py-1.5 rounded-xl border border-white/30 flex items-center gap-1.5 shadow-sm font-semibold transition-all" title="Theme Toggle">
+                <button onclick="toggleTheme()" class="bg-white/20 hover:bg-white/30 text-xs px-3 py-1.5 rounded-xl border border-white/30 flex items-center gap-1.5 shadow-sm font-semibold transition-all text-white" title="Theme Toggle">
                     <i id="themeIcon" class="fa-solid fa-moon"></i> <span id="themeText">Dark</span>
                 </button>
-                <button onclick="exportDataToJSON()" class="bg-white/20 hover:bg-white/30 text-xs px-2.5 py-1.5 rounded-xl border border-white/30 flex items-center gap-1 shadow-sm font-semibold transition-all" title="Backup">
+                <button onclick="exportDataToJSON()" class="bg-white/20 hover:bg-white/30 text-xs px-2.5 py-1.5 rounded-xl border border-white/30 flex items-center gap-1 shadow-sm font-semibold transition-all text-white" title="Backup">
                     <i class="fa-solid fa-cloud-arrow-down"></i>
                 </button>
-                <label class="bg-white/20 hover:bg-white/30 text-xs px-2.5 py-1.5 rounded-xl border border-white/30 flex items-center gap-1 cursor-pointer shadow-sm font-semibold transition-all" title="Restore">
+                <button onclick="triggerProtectedRestore()" class="bg-white/20 hover:bg-white/30 text-xs px-2.5 py-1.5 rounded-xl border border-white/30 flex items-center gap-1 cursor-pointer shadow-sm font-semibold transition-all text-white" title="Restore">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <input type="file" id="restoreFile" accept=".json" class="hidden" onchange="importDataFromJSON(event)">
-                </label>
+                </button>
+                <input type="file" id="restoreFile" accept=".json" class="hidden" onchange="importDataFromJSON(event)">
             </div>
         </div>
     </header>
@@ -101,20 +111,39 @@
 
         <!-- TAB 1: ATTENDANCE -->
         <div id="tab-attendance" class="space-y-4 tab-animate">
+            <!-- Password Security Banner (shown when password lock is enabled) -->
+            <div id="attendanceAuthBanner" class="hidden glass-card p-3.5 rounded-2xl flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <i id="attendanceAuthIcon" class="fa-solid fa-lock text-amber-500"></i>
+                    <span id="attendanceAuthText" class="text-xs font-semibold text-slate-800 dark:text-slate-100">වෙනස්කම් කිරීමට මුරපදය අවශ්‍යයි</span>
+                </div>
+                <button id="attendanceAuthBtn" onclick="toggleAttendanceAuth()" class="text-xs font-bold px-3.5 py-1.5 rounded-xl transition-all shadow-sm">
+                    අගුළු හරින්න
+                </button>
+            </div>
+
             <div class="glass-card p-4 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-3">
                 <div class="w-full md:w-auto flex flex-col sm:flex-row items-center gap-3">
                     <div class="w-full sm:w-auto">
                         <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">දිනය තෝරන්න:</label>
-                        <input type="date" id="attendanceDate" onchange="loadAttendanceData()" class="px-3 py-2 border rounded-xl text-sm w-full bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="shiftAttendanceDate(-1)" class="px-2.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-100 border border-slate-200 dark:border-slate-600 text-xs" title="පෙර දිනය">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <input type="date" id="attendanceDate" onchange="loadAttendanceData()" class="px-3 py-2 border rounded-xl text-sm flex-1 bg-white/80 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <button onclick="shiftAttendanceDate(1)" class="px-2.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-100 border border-slate-200 dark:border-slate-600 text-xs" title="ඊළඟ දිනය">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
                     </div>
                     <!-- Shift Switcher -->
                     <div class="w-full sm:w-auto">
                         <label class="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">වැඩ මුරය (Shift):</label>
-                        <div class="flex bg-white/50 dark:bg-slate-800/50 p-1 rounded-xl border border-white/60 dark:border-slate-700">
+                        <div class="flex bg-slate-100 dark:bg-slate-700/80 p-1 rounded-xl border border-slate-200 dark:border-slate-600">
                             <button onclick="setShiftMode('day')" id="shiftBtn-day" class="flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg transition-all bg-sky-600 text-white shadow-sm flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-sun"></i> දිවා (Day)
                             </button>
-                            <button onclick="setShiftMode('night')" id="shiftBtn-night" class="flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 flex items-center justify-center gap-1.5">
+                            <button onclick="setShiftMode('night')" id="shiftBtn-night" class="flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg transition-all text-slate-600 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-moon"></i> රාත්‍රි (Night)
                             </button>
                         </div>
@@ -124,15 +153,14 @@
                 <!-- Action Buttons & Lock Button -->
                 <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
                     <div id="bulkActionsContainer" class="flex items-center gap-2">
-                        <button onclick="markAllCurrentShift('present')" class="bg-emerald-100/80 dark:bg-emerald-900/40 hover:bg-emerald-200 text-emerald-800 dark:text-emerald-300 text-xs font-medium px-3 py-2 rounded-xl border border-emerald-200 dark:border-emerald-800 transition-colors">
+                        <button onclick="markAllCurrentShift('present')" class="bg-emerald-100 dark:bg-emerald-900/60 hover:bg-emerald-200 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-200 text-xs font-medium px-3 py-2 rounded-xl border border-emerald-200 dark:border-emerald-700 transition-colors">
                             <i class="fa-solid fa-check-double"></i> සියල්ල පැමිණ ඇත
                         </button>
-                        <button onclick="markAllCurrentShift('absent')" class="bg-rose-100/80 dark:bg-rose-900/40 hover:bg-rose-200 text-rose-800 dark:text-rose-300 text-xs font-medium px-3 py-2 rounded-xl border border-rose-200 dark:border-rose-800 transition-colors">
+                        <button onclick="markAllCurrentShift('absent')" class="bg-rose-100 dark:bg-rose-900/60 hover:bg-rose-200 dark:hover:bg-rose-900 text-rose-800 dark:text-rose-200 text-xs font-medium px-3 py-2 rounded-xl border border-rose-200 dark:border-rose-700 transition-colors">
                             <i class="fa-solid fa-xmark"></i> සියල්ල නොපැමිණි
                         </button>
                     </div>
                     <button id="lockToggleBtn" onclick="toggleLockAttendance()" class="text-xs font-bold px-3.5 py-2 rounded-xl border transition-colors flex items-center gap-1.5 shadow-sm">
-                        <!-- Dynamic Lock -->
                     </button>
                 </div>
             </div>
@@ -140,32 +168,32 @@
             <!-- Stats Bar -->
             <div class="grid grid-cols-3 gap-3">
                 <div class="glass-card p-3 rounded-xl text-center border-l-4 border-emerald-500">
-                    <span class="text-[11px] text-slate-500 dark:text-slate-400 block font-medium">පැමිණි (Present)</span>
+                    <span class="text-[11px] text-slate-600 dark:text-slate-300 block font-medium">පැමිණි (Present)</span>
                     <span id="statPresentCount" class="text-base font-bold text-emerald-700 dark:text-emerald-300">0</span>
                 </div>
                 <div class="glass-card p-3 rounded-xl text-center border-l-4 border-rose-500">
-                    <span class="text-[11px] text-slate-500 dark:text-slate-400 block font-medium">නොපැමිණි (Absent)</span>
+                    <span class="text-[11px] text-slate-600 dark:text-slate-300 block font-medium">නොපැමිණි (Absent)</span>
                     <span id="statAbsentCount" class="text-base font-bold text-rose-700 dark:text-rose-300">0</span>
                 </div>
                 <div class="glass-card p-3 rounded-xl text-center border-l-4 border-amber-500">
-                    <span class="text-[11px] text-slate-500 dark:text-slate-400 block font-medium">නිවාඩු (Leave)</span>
+                    <span class="text-[11px] text-slate-600 dark:text-slate-300 block font-medium">නිවාඩු (Leave)</span>
                     <span id="statLeaveCount" class="text-base font-bold text-amber-700 dark:text-amber-300">0</span>
                 </div>
             </div>
 
             <!-- Attendance List -->
             <div class="glass-card rounded-2xl overflow-hidden">
-                <div class="px-4 py-3 bg-indigo-50/80 dark:bg-indigo-950/40 border-b border-indigo-100 dark:border-indigo-900/50 flex justify-between items-center">
-                    <h3 class="text-xs font-bold text-indigo-900 dark:text-indigo-300 uppercase tracking-wider flex items-center gap-2">
-                        <span id="currentShiftTitleIndicator" class="text-sky-600 dark:text-sky-400"><i class="fa-solid fa-sun"></i> දිවා වැඩ මුරය</span> - පැමිණීම සහ නොපැමිණීම සටහන් කිරීම
+                <div class="px-4 py-3 bg-indigo-50/90 dark:bg-indigo-950/70 border-b border-indigo-100 dark:border-indigo-800/70 flex flex-wrap justify-between items-center gap-2">
+                    <h3 class="text-xs font-bold text-indigo-900 dark:text-indigo-200 uppercase tracking-wider flex items-center gap-2">
+                        <span id="currentShiftTitleIndicator" class="text-sky-600 dark:text-sky-300"><i class="fa-solid fa-sun"></i> දිවා වැඩ මුරය</span>
+                        <span>- පැමිණීම සහ නොපැමිණීම සටහන් කිරීම</span>
                     </h3>
                     <div class="flex items-center gap-2">
                         <span id="lockStatusBadge" class="text-[10px] px-2 py-0.5 rounded font-bold"></span>
-                        <span id="attendanceCount" class="text-xs text-indigo-700 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-900 px-2.5 py-0.5 rounded-full font-bold">0 / 0</span>
+                        <span id="attendanceCount" class="text-xs text-indigo-800 dark:text-indigo-200 bg-indigo-100 dark:bg-indigo-900 px-2.5 py-0.5 rounded-full font-bold">0 / 0</span>
                     </div>
                 </div>
-                <div id="attendanceListContainer" class="divide-y divide-slate-100/60 dark:divide-slate-800/60">
-                    <!-- Dynamic Items -->
+                <div id="attendanceListContainer" class="divide-y divide-slate-200/70 dark:divide-slate-700/70">
                 </div>
             </div>
         </div>
@@ -174,8 +202,8 @@
         <div id="tab-employees" class="hidden space-y-4 tab-animate">
             <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-3">
                 <div class="relative w-full sm:w-72">
-                    <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400 text-xs"></i>
-                    <input type="text" id="employeeSearchInput" oninput="renderEmployeesList()" placeholder="නම, අංකය හෝ NIC මඟින් සොයන්න..." class="w-full pl-9 pr-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    <i class="fa-solid fa-search absolute left-3 top-3 text-slate-400 dark:text-slate-300 text-xs"></i>
+                    <input type="text" id="employeeSearchInput" oninput="renderEmployeesList()" placeholder="නම, අංකය හෝ NIC මඟින් සොයන්න..." class="w-full pl-9 pr-3 py-2 border rounded-xl text-xs bg-white/80 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 </div>
                 <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
                     <button onclick="openEmployeeModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-3.5 py-2 rounded-xl shadow-sm flex items-center gap-1.5 transition-colors">
@@ -188,11 +216,10 @@
             </div>
 
             <div class="glass-card rounded-2xl overflow-hidden">
-                <div class="px-4 py-3 bg-emerald-50/80 dark:bg-emerald-950/40 border-b border-emerald-100 dark:border-emerald-900/50">
-                    <h3 class="text-xs font-bold text-emerald-900 dark:text-emerald-300 uppercase tracking-wider">සේවක ලැයිස්තුව සහ පුද්ගලික තොරතුරු</h3>
+                <div class="px-4 py-3 bg-emerald-50/90 dark:bg-emerald-950/70 border-b border-emerald-100 dark:border-emerald-800/70">
+                    <h3 class="text-xs font-bold text-emerald-900 dark:text-emerald-200 uppercase tracking-wider">සේවක ලැයිස්තුව සහ පුද්ගලික තොරතුරු</h3>
                 </div>
-                <div id="employeesListContainer" class="divide-y divide-slate-100/60 dark:divide-slate-800/60">
-                    <!-- Dynamic Employees -->
+                <div id="employeesListContainer" class="divide-y divide-slate-200/70 dark:divide-slate-700/70">
                 </div>
             </div>
         </div>
@@ -202,41 +229,45 @@
             <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-3">
                 <div class="w-full sm:w-auto flex items-center gap-2">
                     <label class="text-xs font-medium text-slate-600 dark:text-slate-300">මාසය තෝරන්න:</label>
-                    <input type="month" id="reportMonthSelect" onchange="renderReports()" class="px-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <button onclick="shiftReportMonth(-1)" class="px-2.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-100 border border-slate-200 dark:border-slate-600 text-xs" title="පෙර මාසය">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <input type="month" id="reportMonthSelect" onchange="renderReports()" class="px-3 py-2 border rounded-xl text-xs bg-white/80 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <button onclick="shiftReportMonth(1)" class="px-2.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-100 border border-slate-200 dark:border-slate-600 text-xs" title="ඊළඟ මාසය">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
                 </div>
                 <div class="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
-                    <button onclick="exportMonthlyReportCSV('day')" class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-medium px-3.5 py-2 rounded-xl shadow-sm flex items-center gap-1.5 transition-colors">
+                    <button onclick="exportMonthlyReportCSV('day')" class="bg-sky-700 hover:bg-sky-800 text-white text-xs font-medium px-3.5 py-2 rounded-xl shadow-sm flex items-center gap-1.5 transition-colors">
                         <i class="fa-solid fa-file-excel"></i> දිවා වාර්තාව CSV
                     </button>
-                    <button onclick="exportMonthlyReportCSV('night')" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium px-3.5 py-2 rounded-xl shadow-sm flex items-center gap-1.5 transition-colors">
+                    <button onclick="exportMonthlyReportCSV('night')" class="bg-purple-700 hover:bg-purple-800 text-white text-xs font-medium px-3.5 py-2 rounded-xl shadow-sm flex items-center gap-1.5 transition-colors">
                         <i class="fa-solid fa-file-excel"></i> රාත්‍රි වාර්තාව CSV
                     </button>
                 </div>
             </div>
 
             <!-- Legend & Info -->
-            <div class="flex justify-between items-center px-2 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
-                <span>සංකේත: <strong class="text-emerald-600">✔ පැමිණි (P)</strong> | <strong class="text-rose-600">✘ නොපැමිණි (A)</strong> | <strong class="text-amber-600">L නිවාඩු</strong></span>
+            <div class="flex justify-between items-center px-2 text-[11px] font-semibold text-slate-700 dark:text-slate-200">
+                <span>සංකේත: <strong class="text-emerald-600 dark:text-emerald-400">✔ පැමිණි (P)</strong> | <strong class="text-rose-600 dark:text-rose-400">✘ නොපැමිණි (A)</strong> | <strong class="text-amber-600 dark:text-amber-400">L නිවාඩු</strong></span>
             </div>
 
             <!-- REPORT 1: DAY SHIFT TABLE -->
             <div class="glass-card rounded-2xl overflow-hidden border-t-4 border-sky-500">
-                <div class="px-4 py-3 bg-sky-50/80 dark:bg-sky-950/40 border-b border-sky-100 dark:border-sky-900/50 flex justify-between items-center">
-                    <h3 class="text-xs font-bold text-sky-900 dark:text-sky-300 uppercase tracking-wider flex items-center gap-2">
+                <div class="px-4 py-3 bg-sky-50/90 dark:bg-sky-950/70 border-b border-sky-100 dark:border-sky-800/70 flex justify-between items-center">
+                    <h3 class="text-xs font-bold text-sky-900 dark:text-sky-200 uppercase tracking-wider flex items-center gap-2">
                         <i class="fa-solid fa-sun"></i> දිවා සේවා මාසික වාර්තාව (Day Shift Monthly Report)
                     </h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-[11px]" id="dayReportTable">
                         <thead>
-                            <tr class="bg-sky-100/60 dark:bg-sky-900/50 text-sky-900 dark:text-sky-200 border-b border-sky-200 dark:border-sky-800">
+                            <tr class="bg-sky-100/70 dark:bg-sky-900/60 text-sky-900 dark:text-sky-100 border-b border-sky-200 dark:border-sky-800">
                                 <th class="p-2.5 font-semibold text-center whitespace-nowrap">අංකය</th>
                                 <th class="p-2.5 font-semibold whitespace-nowrap">සේවකයා</th>
-                                <!-- Dynamic Days -->
                             </tr>
                         </thead>
-                        <tbody id="dayReportTableBody" class="divide-y divide-slate-100/60 dark:divide-slate-800/60">
-                            <!-- Dynamic Day Report -->
+                        <tbody id="dayReportTableBody" class="divide-y divide-slate-200/70 dark:divide-slate-700/70">
                         </tbody>
                     </table>
                 </div>
@@ -244,22 +275,20 @@
 
             <!-- REPORT 2: NIGHT SHIFT TABLE -->
             <div class="glass-card rounded-2xl overflow-hidden border-t-4 border-purple-500">
-                <div class="px-4 py-3 bg-purple-50/80 dark:bg-purple-950/40 border-b border-purple-100 dark:border-purple-900/50 flex justify-between items-center">
-                    <h3 class="text-xs font-bold text-purple-900 dark:text-purple-300 uppercase tracking-wider flex items-center gap-2">
+                <div class="px-4 py-3 bg-purple-50/90 dark:bg-purple-950/70 border-b border-purple-100 dark:border-purple-800/70 flex justify-between items-center">
+                    <h3 class="text-xs font-bold text-purple-900 dark:text-purple-200 uppercase tracking-wider flex items-center gap-2">
                         <i class="fa-solid fa-moon"></i> රාත්‍රි සේවා මාසික වාර්තාව (Night Shift Monthly Report)
                     </h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-[11px]" id="nightReportTable">
                         <thead>
-                            <tr class="bg-purple-100/60 dark:bg-purple-900/50 text-purple-900 dark:text-purple-200 border-b border-purple-200 dark:border-purple-800">
+                            <tr class="bg-purple-100/70 dark:bg-purple-900/60 text-purple-900 dark:text-purple-100 border-b border-purple-200 dark:border-purple-800">
                                 <th class="p-2.5 font-semibold text-center whitespace-nowrap">අංකය</th>
                                 <th class="p-2.5 font-semibold whitespace-nowrap">සේවකයා</th>
-                                <!-- Dynamic Days -->
                             </tr>
                         </thead>
-                        <tbody id="nightReportTableBody" class="divide-y divide-slate-100/60 dark:divide-slate-800/60">
-                            <!-- Dynamic Night Report -->
+                        <tbody id="nightReportTableBody" class="divide-y divide-slate-200/70 dark:divide-slate-700/70">
                         </tbody>
                     </table>
                 </div>
@@ -268,28 +297,85 @@
 
         <!-- TAB 4: SETTINGS -->
         <div id="tab-settings" class="hidden space-y-4 tab-animate">
+            <!-- Password Lock Security Card -->
+            <div class="glass-card p-5 rounded-2xl space-y-3" id="passwordSecurityCard">
+                <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-2.5">
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-indigo-600 dark:text-indigo-400"></i> මුරපද ආරක්ෂාව (Password Lock)
+                    </h3>
+                    <span id="passwordStatusBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full">අක්‍රියයි</span>
+                </div>
+                <p id="passwordStatusDesc" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    සේවක පැමිණීම් සටහන් කිරීමේ සහ සැකසුම් කොටසේ අනවසර වෙනස්කම් වැළැක්වීමට මුරපදයක් සකසන්න.
+                </p>
+                <div id="passwordControlsNotSet">
+                    <button onclick="openSetupPasswordModal(false)" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-key"></i> මුරපදය සකසන්න (Set Password)
+                    </button>
+                </div>
+                <div id="passwordControlsEnabled" class="hidden space-y-2.5">
+                    <button id="settingsAuthToggleBtn" onclick="toggleAttendanceAuth()" class="w-full text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm flex items-center justify-center gap-2">
+                    </button>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button onclick="openSetupPasswordModal(true)" class="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-indigo-700 dark:text-indigo-300 text-xs font-bold px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-key"></i> වෙනස් කරන්න
+                        </button>
+                        <button onclick="openRemovePasswordPrompt()" class="bg-rose-100 dark:bg-rose-900/50 hover:bg-rose-200 dark:hover:bg-rose-900 text-rose-800 dark:text-rose-200 text-xs font-bold px-3 py-2 rounded-xl border border-rose-200 dark:border-rose-700 flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-lock-open"></i> ඉවත් කරන්න
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome Boss Sound Card -->
+            <div class="glass-card p-5 rounded-2xl space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-2.5">
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-volume-high text-indigo-600 dark:text-indigo-400"></i> පිළිගැනීමේ හඬ (Welcome Boss)
+                    </h3>
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="welcomeSoundToggle" onchange="handleWelcomeSoundToggle(this)" class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-300 dark:bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all relative peer-checked:bg-indigo-600"></div>
+                    </label>
+                </div>
+                <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    ඇප් එක විවෘත කරන සෑම අවස්ථාවකම "Welcome Boss!" පිළිගැනීමේ හඬ වාදනය වේ.
+                </p>
+                <button onclick="playWelcomeBossSound(true)" class="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-indigo-700 dark:text-indigo-300 text-xs font-bold px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-600 flex items-center gap-2">
+                    <i class="fa-solid fa-play"></i> හඬ පරීක්ෂා කරන්න (Test Sound)
+                </button>
+            </div>
+
+            <!-- Offline App & Backup/Restore Card -->
             <div class="glass-card p-5 rounded-2xl space-y-4">
-                <h3 class="text-sm font-bold text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700 pb-2 flex items-center gap-2">
-                    <i class="fa-solid fa-mobile-screen-button text-indigo-600"></i> දුරකථනයට App එක ස්ථාපනය කරගැනීම
+                <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-700 pb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-mobile-screen-button text-indigo-600 dark:text-indigo-400"></i> දුරකථනයට App එක ස්ථාපනය සහ Backup
                 </h3>
                 <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    මෙම පද්ධතිය අන්තර්ජාලය නොමැතිව (Offline) වුවද ඔබගේ දුරකථනයෙන් පහසුවෙන් භාවිත කළ හැක. පහත බොත්තම ඔබා App එක ස්ථිරවම ඔබේ දුරකථනයට ලබාගත හැක.
+                    මෙම පද්ධතිය අන්තර්ජාලය නොමැතිව (Offline) වුවද ඔබගේ දුරකථනයෙන් පහසුවෙන් භාවිත කළ හැක. අවශ්‍ය විටෙක JSON Backup ගොනුවක් ලෙස ලබාගැනීමට හෝ Restore කිරීමට සහ HTML ගොනුව Download කිරීමට පහත බොත්තම් භාවිත කරන්න.
                 </p>
-                <div>
-                    <button onclick="downloadAppFile()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md flex items-center gap-2 transition-transform active:scale-95">
+                <div class="flex flex-wrap gap-2.5">
+                    <button onclick="exportDataToJSON()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm flex items-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-down"></i> Backup JSON
+                    </button>
+                    <button onclick="triggerProtectedRestore()" class="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-indigo-700 dark:text-indigo-300 text-xs font-bold px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 flex items-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Restore JSON
+                    </button>
+                    <button onclick="downloadAppFile()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-md flex items-center gap-2">
                         <i class="fa-solid fa-download"></i> App ගොනුව (HTML) Download කරන්න
                     </button>
                 </div>
             </div>
 
-            <div class="glass-card p-5 rounded-2xl space-y-3 border-rose-200">
-                <h3 class="text-sm font-bold text-rose-600 border-b border-rose-100 dark:border-rose-900 pb-2 flex items-center gap-2">
+            <!-- Danger Zone -->
+            <div class="glass-card p-5 rounded-2xl space-y-3 border-rose-300 dark:border-rose-800/70">
+                <h3 class="text-sm font-bold text-rose-600 dark:text-rose-400 border-b border-rose-100 dark:border-rose-900 pb-2 flex items-center gap-2">
                     <i class="fa-solid fa-triangle-exclamation"></i> දත්ත කළමනාකරණය සහ යළි පිහිටුවීම
                 </h3>
                 <p class="text-xs text-slate-600 dark:text-slate-300">
                     සියලුම සේවක දත්ත සහ පැමිණීම් ඉවත් කර මුල සිට ආරම්භ කිරීමට අවශ්‍ය නම් පමණක් පහත බොත්තම භාවිත කරන්න.
                 </p>
-                <button onclick="resetAllData()" class="bg-rose-100/80 dark:bg-rose-900/40 hover:bg-rose-200 text-rose-800 dark:text-rose-300 text-xs font-medium px-3.5 py-2 rounded-xl border border-rose-200 dark:border-rose-800 transition-colors flex items-center gap-1.5">
+                <button onclick="resetAllData()" class="bg-rose-100 dark:bg-rose-900/60 hover:bg-rose-200 dark:hover:bg-rose-900 text-rose-800 dark:text-rose-200 text-xs font-bold px-3.5 py-2 rounded-xl border border-rose-200 dark:border-rose-700 transition-colors flex items-center gap-1.5">
                     <i class="fa-solid fa-trash-can"></i> සියලු දත්ත මකා දමන්න (Reset All)
                 </button>
             </div>
@@ -300,82 +386,136 @@
     <!-- Bottom Navigation Bar -->
     <nav class="fixed bottom-0 left-0 right-0 glass-nav shadow-lg z-40 px-2 py-1.5">
         <div class="max-w-4xl mx-auto flex justify-around items-center">
-            <button onclick="switchTab('attendance')" id="navBtn-attendance" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/60 transition-all font-bold">
+            <button onclick="switchTab('attendance')" id="navBtn-attendance" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-indigo-600 dark:text-indigo-300 bg-indigo-50/90 dark:bg-indigo-950/70 transition-all font-bold">
                 <i class="fa-solid fa-calendar-check text-base mb-0.5"></i>
                 <span class="text-[10px]">පැමිණීම</span>
             </button>
-            <button onclick="switchTab('employees')" id="navBtn-employees" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-emerald-600 transition-all">
+            <button onclick="switchTab('employees')" id="navBtn-employees" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-600 dark:text-slate-300 hover:text-emerald-600 transition-all">
                 <i class="fa-solid fa-id-card text-base mb-0.5"></i>
                 <span class="text-[10px]">සේවකයන්</span>
             </button>
-            <button onclick="switchTab('reports')" id="navBtn-reports" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-purple-600 transition-all">
+            <button onclick="switchTab('reports')" id="navBtn-reports" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-600 dark:text-slate-300 hover:text-purple-600 transition-all">
                 <i class="fa-solid fa-chart-pie text-base mb-0.5"></i>
                 <span class="text-[10px]">වාර්තා</span>
             </button>
-            <button onclick="switchTab('settings')" id="navBtn-settings" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 transition-all">
+            <button onclick="switchTab('settings')" id="navBtn-settings" class="flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white transition-all">
                 <i class="fa-solid fa-gear text-base mb-0.5"></i>
                 <span class="text-[10px]">සැකසුම්</span>
             </button>
         </div>
     </nav>
 
-    <!-- EMPLOYEE MODAL -->
-    <div id="employeeModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-white/60 dark:border-slate-800 tab-animate">
-            <div class="px-5 py-4 bg-emerald-50/80 dark:bg-emerald-950/60 border-b border-emerald-100 dark:border-emerald-900/50 flex justify-between items-center">
-                <h3 id="modalTitle" class="text-sm font-bold text-emerald-900 dark:text-emerald-300">නව සේවකයෙක් එකතු කරන්න</h3>
-                <button onclick="closeEmployeeModal()" class="text-slate-400 hover:text-slate-600 text-sm"><i class="fa-solid fa-xmark"></i></button>
+    <!-- PASSWORD PROMPT MODAL -->
+    <div id="passwordPromptModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 tab-animate">
+            <div class="px-5 py-4 bg-indigo-50 dark:bg-indigo-950/70 border-b border-indigo-100 dark:border-indigo-800 flex items-center gap-2.5">
+                <i class="fa-solid fa-lock text-indigo-600 dark:text-indigo-300"></i>
+                <h3 id="pwdPromptTitle" class="text-sm font-bold text-slate-800 dark:text-slate-100">මුරපදය ඇතුළත් කරන්න</h3>
             </div>
-            <div class="p-5 overflow-y-auto space-y-3 flex-1 dark:text-slate-200">
+            <div class="p-5 space-y-3">
+                <p id="pwdPromptMessage" class="text-xs text-slate-600 dark:text-slate-300">වෙනස්කම් සිදු කිරීමට ආරක්ෂක මුරපදය ඇතුළත් කරන්න.</p>
+                <div class="relative">
+                    <input type="password" id="pwdPromptInput" onkeydown="if(event.key==='Enter') submitPasswordPrompt()" placeholder="මුරපදය (Password / PIN)" class="w-full pr-10 pl-3 py-2.5 border rounded-xl text-xs bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button type="button" onclick="toggleInputVisibility('pwdPromptInput', this)" class="absolute right-3 top-2.5 text-slate-400 dark:text-slate-300">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+                <div id="pwdPromptError" class="hidden text-xs bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-200 px-3 py-2 rounded-xl"></div>
+            </div>
+            <div class="px-5 py-3 bg-slate-50 dark:bg-slate-900/60 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-2">
+                <button onclick="closePasswordPromptModal()" class="px-3.5 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">අවලංගු කරන්න</button>
+                <button id="pwdPromptConfirmBtn" onclick="submitPasswordPrompt()" class="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm">අගුළු හරින්න</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETUP / CHANGE PASSWORD MODAL -->
+    <div id="setupPasswordModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 tab-animate">
+            <div class="px-5 py-4 bg-emerald-50 dark:bg-emerald-950/70 border-b border-emerald-100 dark:border-emerald-800 flex items-center gap-2.5">
+                <i class="fa-solid fa-key text-emerald-600 dark:text-emerald-300"></i>
+                <h3 id="setupPwdTitle" class="text-sm font-bold text-slate-800 dark:text-slate-100">නව මුරපදය සකසන්න</h3>
+            </div>
+            <div class="p-5 space-y-3">
+                <p class="text-xs text-slate-600 dark:text-slate-300">පැමිණීම් සටහන් කිරීම සහ සැකසුම් වෙනස් කිරීම ආරක්ෂා කිරීමට මුරපදයක් සකසන්න (අවම අක්ෂර 4).</p>
+                <div id="currentPwdWrapper" class="hidden">
+                    <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">දැනට පවතින මුරපදය</label>
+                    <input type="password" id="setupCurrentPwd" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">නව මුරපදය (අවම අක්ෂර 4)</label>
+                    <input type="password" id="setupNewPwd" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">නව මුරපදය නැවත ඇතුළත් කරන්න</label>
+                    <input type="password" id="setupConfirmPwd" onkeydown="if(event.key==='Enter') submitSetupPassword()" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div id="setupPwdError" class="hidden text-xs bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-200 px-3 py-2 rounded-xl"></div>
+            </div>
+            <div class="px-5 py-3 bg-slate-50 dark:bg-slate-900/60 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-2">
+                <button onclick="closeSetupPasswordModal()" class="px-3.5 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">අවලංගු කරන්න</button>
+                <button onclick="submitSetupPassword()" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">සුරකින්න</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EMPLOYEE MODAL -->
+    <div id="employeeModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700 tab-animate">
+            <div class="px-5 py-4 bg-emerald-50 dark:bg-emerald-950/70 border-b border-emerald-100 dark:border-emerald-800 flex justify-between items-center">
+                <h3 id="modalTitle" class="text-sm font-bold text-emerald-900 dark:text-emerald-200">නව සේවකයෙක් එකතු කරන්න</h3>
+                <button onclick="closeEmployeeModal()" class="text-slate-500 dark:text-slate-300 hover:text-slate-700 text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto space-y-3 flex-1 text-slate-800 dark:text-slate-100">
                 <input type="hidden" id="editEmployeeId">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">සම්පූර්ණ නම *</label>
-                        <input type="text" id="empName" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: එච්. එම්. පෙරේරා">
+                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">සම්පූර්ණ නම *</label>
+                        <input type="text" id="empName" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: එච්. එම්. පෙරේරා">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">සේවක අංකය *</label>
-                        <input type="text" id="empNo" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: EMP001">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">තනතුර</label>
-                        <input type="text" id="empRole" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: වැඩ පරීක්ෂක">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">ජාතික හැඳුනුම්පත් අංකය (NIC)</label>
-                        <input type="text" id="empNic" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="NIC අංකය">
+                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">සේවක අංකය *</label>
+                        <input type="text" id="empNo" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: EMP001">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">සේවය කරන වැඩ මුරය *</label>
-                        <select id="empShiftType" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">තනතුර</label>
+                        <input type="text" id="empRole" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: වැඩ පරීක්ෂක">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">ජාතික හැඳුනුම්පත් අංකය (NIC)</label>
+                        <input type="text" id="empNic" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="NIC අංකය">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">සේවය කරන වැඩ මුරය *</label>
+                        <select id="empShiftType" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
                             <option value="both">දිවා සහ රාත්‍රි (Both)</option>
                             <option value="day">දිවා සේවය පමණයි</option>
                             <option value="night">රාත්‍රි සේවය පමණයි</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">සේවයට බැඳුණු දිනය *</label>
-                        <input type="date" id="empJoinDate" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">සේවයට බැඳුණු දිනය *</label>
+                        <input type="date" id="empJoinDate" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">දුරකථන අංකය</label>
-                        <input type="tel" id="empPhone" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="07XXXXXXXX">
+                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">දුරකථන අංකය</label>
+                        <input type="tel" id="empPhone" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="07XXXXXXXX">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">හදිසි ඇමතුම් අංකය</label>
-                        <input type="text" id="empEmergency" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: බිරිඳ - 0712345678">
+                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">හදිසි ඇමතුම් අංකය</label>
+                        <input type="text" id="empEmergency" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="උදා: බිරිඳ - 0712345678">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">රුධිර වර්ගය</label>
-                        <select id="empBlood" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">රුධිර වර්ගය</label>
+                        <select id="empBlood" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
                             <option value="">තෝරන්න</option>
                             <option value="A+">A+</option><option value="A-">A-</option>
                             <option value="B+">B+</option><option value="B-">B-</option>
@@ -384,16 +524,16 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">උපන් දිනය</label>
-                        <input type="date" id="empDob" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">උපන් දිනය</label>
+                        <input type="date" id="empDob" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">පදිංචි ලිපිනය</label>
-                    <textarea id="empAddress" rows="2" class="w-full px-3 py-2 border rounded-xl text-xs bg-white/60 dark:bg-slate-800/60 dark:border-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="ලිපිනය"></textarea>
+                    <label class="block text-[11px] font-medium text-slate-600 dark:text-slate-300 mb-1">පදිංචි ලිපිනය</label>
+                    <textarea id="empAddress" rows="2" class="w-full px-3 py-2 border rounded-xl text-xs bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="ලිපිනය"></textarea>
                 </div>
             </div>
-            <div class="px-5 py-3 bg-slate-50/80 dark:bg-slate-800/80 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-2">
+            <div class="px-5 py-3 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex justify-end gap-2">
                 <button onclick="closeEmployeeModal()" class="px-3.5 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700">අවලංගු කරන්න</button>
                 <button onclick="saveEmployee()" class="px-4 py-2 rounded-xl text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm">සුරකින්න</button>
             </div>
@@ -401,15 +541,15 @@
     </div>
 
     <!-- PROFILE MODAL -->
-    <div id="profileModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md w-full max-w-md rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-white/60 dark:border-slate-800 tab-animate">
+    <div id="profileModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col border border-slate-200 dark:border-slate-700 tab-animate">
             <div class="px-5 py-4 bg-emerald-700 text-white flex justify-between items-center">
                 <h3 class="text-sm font-bold flex items-center gap-2"><i class="fa-solid fa-id-badge"></i> සේවක පැතිකඩ</h3>
-                <button onclick="closeProfileModal()" class="text-emerald-200 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeProfileModal()" class="text-emerald-100 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div id="profileContent" class="p-5 overflow-y-auto space-y-3 text-xs flex-1 dark:text-slate-200"></div>
-            <div class="px-5 py-3 bg-slate-50/80 dark:bg-slate-800/80 border-t border-slate-100 dark:border-slate-800 flex justify-end">
-                <button onclick="closeProfileModal()" class="px-4 py-2 rounded-xl text-xs font-medium bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200">වසන්න</button>
+            <div id="profileContent" class="p-5 overflow-y-auto space-y-3 text-xs flex-1 text-slate-800 dark:text-slate-100"></div>
+            <div class="px-5 py-3 bg-slate-50 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex justify-end">
+                <button onclick="closeProfileModal()" class="px-4 py-2 rounded-xl text-xs font-medium bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100">වසන්න</button>
             </div>
         </div>
     </div>
@@ -419,6 +559,8 @@
         const STORAGE_KEY_ATT = 'diyatalawa_hosp_att_glass_v4';
         const STORAGE_KEY_LOCK = 'diyatalawa_hosp_lock_v1';
         const STORAGE_KEY_THEME = 'diyatalawa_hosp_theme';
+        const STORAGE_KEY_PWD = 'diyatalawa_hosp_pwd_hash_v1';
+        const STORAGE_KEY_WELCOME_SOUND = 'diyatalawa_hosp_welcome_sound_v1';
 
         const defaultEmployees = [
             { id: '1', name: 'සමිත් මධුසංක', empNo: 'EMP001', role: 'වැඩ පරීක්ෂක', shiftType: 'both', joinDate: '2026-11-01', nic: '921920000V', phone: '0712345678', emergency: 'භාර්යාව - 0719876543', blood: 'O+', dob: '1992-07-10', address: 'දියතලාව' }
@@ -428,6 +570,39 @@
         let attendance = JSON.parse(localStorage.getItem(STORAGE_KEY_ATT)) || {};
         let lockedDates = JSON.parse(localStorage.getItem(STORAGE_KEY_LOCK)) || {};
         let currentShift = 'day';
+        let isAdminUnlocked = false;
+        let pendingProtectedAction = null;
+        let pwdPromptMode = 'unlock'; // 'unlock' | 'remove'
+        let isChangingExistingPassword = false;
+        let welcomeSoundAttemptedOnGesture = false;
+
+        function isPasswordEnabled() {
+            return Boolean(localStorage.getItem(STORAGE_KEY_PWD));
+        }
+
+        function isWelcomeSoundEnabled() {
+            const raw = localStorage.getItem(STORAGE_KEY_WELCOME_SOUND);
+            return raw === null ? true : raw === 'true';
+        }
+
+        async function hashPassword(input) {
+            if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+                const encoded = new TextEncoder().encode(input);
+                const digest = await window.crypto.subtle.digest('SHA-256', encoded);
+                return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+            // Pure-JS fallback for non-HTTPS file:// contexts
+            let h1 = 0xdeadbeef ^ input.length;
+            let h2 = 0x41c6ce57 ^ input.length;
+            for (let i = 0; i < input.length; i++) {
+                const ch = input.charCodeAt(i);
+                h1 = Math.imul(h1 ^ ch, 2654435761);
+                h2 = Math.imul(h2 ^ ch, 1597334677);
+            }
+            h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+            h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+            return (h2 >>> 0).toString(16).padStart(8, '0') + (h1 >>> 0).toString(16).padStart(8, '0');
+        }
 
         function sortEmployeesByEmpNo(arr) {
             return arr.sort((a, b) => {
@@ -447,18 +622,317 @@
 
             document.getElementById('attendanceDate').value = todayStr;
             document.getElementById('reportMonthSelect').value = `${year}-${month}`;
-            
+
             const savedTheme = localStorage.getItem(STORAGE_KEY_THEME) || 'light';
             setTheme(savedTheme, false);
 
             updateLiveDateTime();
             setInterval(updateLiveDateTime, 1000);
 
+            updateSecurityAndSoundUI();
             loadAttendanceData();
             renderEmployeesList();
             renderReports();
+
+            if (isWelcomeSoundEnabled()) {
+                playWelcomeBossSound(false);
+            }
         });
 
+        // --- WELCOME BOSS SOUND (TTS + CHIME FALLBACK + AUTOPLAY GESTURE FALLBACK) ---
+        function playWelcomeBossSound(isManualTest = false) {
+            let spoken = false;
+            try {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utter = new SpeechSynthesisUtterance('Welcome boss!');
+                    utter.lang = 'en-US';
+                    utter.pitch = 0.95;
+                    utter.rate = 0.95;
+                    const voices = window.speechSynthesis.getVoices();
+                    const enVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('en'));
+                    if (enVoice) utter.voice = enVoice;
+                    window.speechSynthesis.speak(utter);
+                    spoken = true;
+                }
+            } catch (e) {
+                spoken = false;
+            }
+
+            if (!spoken || isManualTest) {
+                playStartupChime();
+            }
+
+            // Mobile Chrome often requires one user tap before audio/TTS plays on initial page load
+            if (!isManualTest && !welcomeSoundAttemptedOnGesture) {
+                welcomeSoundAttemptedOnGesture = true;
+                const replayOnFirstTap = () => {
+                    document.removeEventListener('pointerdown', replayOnFirstTap);
+                    if (isWelcomeSoundEnabled() && 'speechSynthesis' in window && !window.speechSynthesis.speaking) {
+                        try {
+                            const u = new SpeechSynthesisUtterance('Welcome boss!');
+                            u.lang = 'en-US';
+                            u.pitch = 0.95;
+                            u.rate = 0.95;
+                            window.speechSynthesis.speak(u);
+                        } catch (_) {
+                            playStartupChime();
+                        }
+                    }
+                };
+                document.addEventListener('pointerdown', replayOnFirstTap, { once: true });
+            }
+        }
+
+        function playStartupChime() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const notes = [523.25, 659.25, 783.99]; // C5 E5 G5
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    const start = ctx.currentTime + idx * 0.11;
+                    gain.gain.setValueAtTime(0.001, start);
+                    gain.gain.exponentialRampToValueAtTime(0.18, start + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.001, start + 0.22);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(start);
+                    osc.stop(start + 0.24);
+                });
+            } catch (_) {}
+        }
+
+        function handleWelcomeSoundToggle(checkbox) {
+            const desired = checkbox.checked;
+            if (isPasswordEnabled() && !isAdminUnlocked) {
+                checkbox.checked = !desired;
+                requireAuthThen(() => {
+                    localStorage.setItem(STORAGE_KEY_WELCOME_SOUND, String(desired));
+                    updateSecurityAndSoundUI();
+                });
+                return;
+            }
+            localStorage.setItem(STORAGE_KEY_WELCOME_SOUND, String(desired));
+            updateSecurityAndSoundUI();
+        }
+
+        // --- PASSWORD PROTECTION ---
+        function requireAuthThen(action) {
+            if (isPasswordEnabled() && !isAdminUnlocked) {
+                pendingProtectedAction = action;
+                openPasswordPromptModal('unlock');
+            } else {
+                action();
+            }
+        }
+
+        function toggleAttendanceAuth() {
+            if (!isPasswordEnabled()) return;
+            if (!isAdminUnlocked) {
+                requireAuthThen(() => {});
+            } else {
+                isAdminUnlocked = false;
+                updateSecurityAndSoundUI();
+            }
+        }
+
+        function openPasswordPromptModal(mode) {
+            pwdPromptMode = mode;
+            const titleEl = document.getElementById('pwdPromptTitle');
+            const msgEl = document.getElementById('pwdPromptMessage');
+            const btnEl = document.getElementById('pwdPromptConfirmBtn');
+            const inputEl = document.getElementById('pwdPromptInput');
+            const errEl = document.getElementById('pwdPromptError');
+
+            inputEl.value = '';
+            inputEl.type = 'password';
+            errEl.classList.add('hidden');
+
+            if (mode === 'remove') {
+                titleEl.innerText = 'මුරපද ආරක්ෂාව ඉවත් කිරීම';
+                msgEl.innerText = 'මුරපද ආරක්ෂාව ඉවත් කිරීමට දැනට පවතින මුරපදය ඇතුළත් කරන්න.';
+                btnEl.innerText = 'ඉවත් කරන්න';
+            } else {
+                titleEl.innerText = 'මුරපදය ඇතුළත් කරන්න';
+                msgEl.innerText = 'වෙනස්කම් සිදු කිරීමට ආරක්ෂක මුරපදය ඇතුළත් කරන්න.';
+                btnEl.innerText = 'අගුළු හරින්න';
+            }
+            document.getElementById('passwordPromptModal').classList.remove('hidden');
+            setTimeout(() => inputEl.focus(), 80);
+        }
+
+        function closePasswordPromptModal() {
+            pendingProtectedAction = null;
+            document.getElementById('passwordPromptModal').classList.add('hidden');
+        }
+
+        async function submitPasswordPrompt() {
+            const input = document.getElementById('pwdPromptInput').value;
+            const errEl = document.getElementById('pwdPromptError');
+            if (!input) {
+                errEl.innerText = 'කරුණාකර මුරපදය ඇතුළත් කරන්න.';
+                errEl.classList.remove('hidden');
+                return;
+            }
+            const stored = localStorage.getItem(STORAGE_KEY_PWD);
+            const hashed = await hashPassword(input);
+            if (stored && hashed !== stored) {
+                errEl.innerText = 'වැරදි මුරපදයකි. නැවත උත්සාහ කරන්න.';
+                errEl.classList.remove('hidden');
+                return;
+            }
+
+            if (pwdPromptMode === 'remove') {
+                localStorage.removeItem(STORAGE_KEY_PWD);
+                isAdminUnlocked = false;
+                document.getElementById('passwordPromptModal').classList.add('hidden');
+                updateSecurityAndSoundUI();
+                alert('මුරපද ආරක්ෂාව ඉවත් කරන ලදී.');
+                return;
+            }
+
+            isAdminUnlocked = true;
+            const action = pendingProtectedAction;
+            pendingProtectedAction = null;
+            document.getElementById('passwordPromptModal').classList.add('hidden');
+            updateSecurityAndSoundUI();
+            if (typeof action === 'function') action();
+        }
+
+        function openRemovePasswordPrompt() {
+            openPasswordPromptModal('remove');
+        }
+
+        function openSetupPasswordModal(isChange) {
+            isChangingExistingPassword = isChange;
+            document.getElementById('setupPwdTitle').innerText = isChange ? 'මුරපදය වෙනස් කරන්න' : 'නව මුරපදය සකසන්න';
+            document.getElementById('currentPwdWrapper').classList.toggle('hidden', !isChange);
+            document.getElementById('setupCurrentPwd').value = '';
+            document.getElementById('setupNewPwd').value = '';
+            document.getElementById('setupConfirmPwd').value = '';
+            document.getElementById('setupPwdError').classList.add('hidden');
+            document.getElementById('setupPasswordModal').classList.remove('hidden');
+        }
+
+        function closeSetupPasswordModal() {
+            document.getElementById('setupPasswordModal').classList.add('hidden');
+        }
+
+        async function submitSetupPassword() {
+            const currentPwd = document.getElementById('setupCurrentPwd').value;
+            const newPwd = document.getElementById('setupNewPwd').value;
+            const confirmPwd = document.getElementById('setupConfirmPwd').value;
+            const errEl = document.getElementById('setupPwdError');
+
+            if (isChangingExistingPassword) {
+                const stored = localStorage.getItem(STORAGE_KEY_PWD);
+                const curHash = await hashPassword(currentPwd);
+                if (!currentPwd || curHash !== stored) {
+                    errEl.innerText = 'දැනට පවතින මුරපදය වැරදියි.';
+                    errEl.classList.remove('hidden');
+                    return;
+                }
+            }
+            if (newPwd.length < 4) {
+                errEl.innerText = 'නව මුරපදය අවම වශයෙන් අකුරු හෝ ඉලක්කම් 4ක් විය යුතුය.';
+                errEl.classList.remove('hidden');
+                return;
+            }
+            if (newPwd !== confirmPwd) {
+                errEl.innerText = 'ඇතුළත් කළ මුරපද දෙක නොගැළපේ.';
+                errEl.classList.remove('hidden');
+                return;
+            }
+
+            const newHash = await hashPassword(newPwd);
+            localStorage.setItem(STORAGE_KEY_PWD, newHash);
+            isAdminUnlocked = true;
+            closeSetupPasswordModal();
+            updateSecurityAndSoundUI();
+            alert(isChangingExistingPassword ? 'මුරපදය සාර්ථකව වෙනස් කරන ලදී.' : 'ආරක්ෂක මුරපදය සාර්ථකව සකසන ලදී.');
+        }
+
+        function toggleInputVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        function updateSecurityAndSoundUI() {
+            const enabled = isPasswordEnabled();
+            const attBanner = document.getElementById('attendanceAuthBanner');
+            const attIcon = document.getElementById('attendanceAuthIcon');
+            const attText = document.getElementById('attendanceAuthText');
+            const attBtn = document.getElementById('attendanceAuthBtn');
+
+            if (enabled) {
+                attBanner.classList.remove('hidden');
+                if (isAdminUnlocked) {
+                    attIcon.className = 'fa-solid fa-lock-open text-emerald-500';
+                    attText.innerText = 'මුරපදය තහවුරුයි — වෙනස්කම් කළ හැක';
+                    attBtn.className = 'text-xs font-bold px-3.5 py-1.5 rounded-xl bg-emerald-100 dark:bg-emerald-900/70 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700 shadow-sm';
+                    attBtn.innerText = 'අගුළු දමන්න';
+                } else {
+                    attIcon.className = 'fa-solid fa-lock text-amber-500';
+                    attText.innerText = 'වෙනස්කම් කිරීමට මුරපදය අවශ්‍යයි';
+                    attBtn.className = 'text-xs font-bold px-3.5 py-1.5 rounded-xl bg-indigo-600 text-white shadow-sm';
+                    attBtn.innerText = 'අගුළු හරින්න';
+                }
+            } else {
+                attBanner.classList.add('hidden');
+            }
+
+            // Settings Password Card
+            const badge = document.getElementById('passwordStatusBadge');
+            const desc = document.getElementById('passwordStatusDesc');
+            const notSetBox = document.getElementById('passwordControlsNotSet');
+            const enabledBox = document.getElementById('passwordControlsEnabled');
+            const settingsAuthBtn = document.getElementById('settingsAuthToggleBtn');
+
+            if (enabled) {
+                badge.innerText = 'සක්‍රියයි';
+                badge.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/70 text-emerald-800 dark:text-emerald-200';
+                desc.innerText = 'පැමිණීම් සටහන් කිරීමේ කොටසේ සහ සැකසුම් කොටසේ වෙනස්කම් සිදු කිරීමට මුරපදය අවශ්‍ය වේ.';
+                notSetBox.classList.add('hidden');
+                enabledBox.classList.remove('hidden');
+
+                if (isAdminUnlocked) {
+                    settingsAuthBtn.className = 'w-full text-xs font-bold px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white shadow-sm flex items-center justify-center gap-2';
+                    settingsAuthBtn.innerHTML = '<i class="fa-solid fa-lock"></i> නැවත අගුළු දමන්න (Lock Now)';
+                } else {
+                    settingsAuthBtn.className = 'w-full text-xs font-bold px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm flex items-center justify-center gap-2';
+                    settingsAuthBtn.innerHTML = '<i class="fa-solid fa-lock-open"></i> වෙනස්කම් සඳහා අගුළු හරින්න (Unlock)';
+                }
+            } else {
+                badge.innerText = 'අක්‍රියයි';
+                badge.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200';
+                desc.innerText = 'සේවක පැමිණීම් සටහන් කිරීමේ සහ සැකසුම් කොටසේ අනවසර වෙනස්කම් වැළැක්වීමට මුරපදයක් සකසන්න.';
+                notSetBox.classList.remove('hidden');
+                enabledBox.classList.add('hidden');
+            }
+
+            const soundToggle = document.getElementById('welcomeSoundToggle');
+            if (soundToggle) soundToggle.checked = isWelcomeSoundEnabled();
+        }
+
+        function triggerProtectedRestore() {
+            requireAuthThen(() => {
+                document.getElementById('restoreFile').click();
+            });
+        }
+
+        // --- THEME ---
         function toggleTheme() {
             const currentTheme = localStorage.getItem(STORAGE_KEY_THEME) === 'dark' ? 'light' : 'dark';
             setTheme(currentTheme, true);
@@ -489,7 +963,7 @@
             const now = new Date();
             const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
             const el = document.getElementById('currentDateTimeDisplay');
-            if(el) el.innerText = `${now.toLocaleDateString('en-US', options)} | ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
+            if (el) el.innerText = `${now.toLocaleDateString('en-US', options)} | ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
         }
 
         function switchTab(tabName) {
@@ -500,7 +974,7 @@
                     tabEl.classList.add('hidden');
                     tabEl.classList.remove('tab-animate');
                 }
-                if (btnEl) btnEl.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 transition-all";
+                if (btnEl) btnEl.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all";
             });
 
             const activeTab = document.getElementById(`tab-${tabName}`);
@@ -514,27 +988,43 @@
             const btn = document.getElementById(`navBtn-${tabName}`);
 
             if (tabName === 'attendance') {
-                header.style.background = "rgba(79, 70, 229, 0.85)";
+                header.style.background = "rgba(67, 56, 202, 0.94)";
                 headerIcon.className = "fa-solid fa-calendar-check text-indigo-200";
                 headerTitleText.innerText = "පැමිණීම සහ නොපැමිණීම";
-                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/60 transition-all font-bold scale-105";
+                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-indigo-600 dark:text-indigo-300 bg-indigo-50/90 dark:bg-indigo-950/70 transition-all font-bold scale-105";
             } else if (tabName === 'employees') {
-                header.style.background = "rgba(5, 150, 105, 0.85)";
+                header.style.background = "rgba(5, 150, 105, 0.94)";
                 headerIcon.className = "fa-solid fa-id-card text-emerald-200";
                 headerTitleText.innerText = "සේවක කළමනාකරණය";
-                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-emerald-600 dark:text-emerald-400 bg-emerald-50/80 dark:bg-emerald-950/60 transition-all font-bold scale-105";
+                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-emerald-600 dark:text-emerald-300 bg-emerald-50/90 dark:bg-emerald-950/70 transition-all font-bold scale-105";
             } else if (tabName === 'reports') {
-                header.style.background = "rgba(147, 51, 234, 0.85)";
+                header.style.background = "rgba(126, 34, 206, 0.94)";
                 headerIcon.className = "fa-solid fa-chart-pie text-purple-200";
                 headerTitleText.innerText = "මාසික වාර්තා";
-                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-purple-600 dark:text-purple-400 bg-purple-50/80 dark:bg-purple-950/60 transition-all font-bold scale-105";
+                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-purple-600 dark:text-purple-300 bg-purple-50/90 dark:bg-purple-950/70 transition-all font-bold scale-105";
                 renderReports();
             } else if (tabName === 'settings') {
-                header.style.background = "rgba(51, 65, 85, 0.85)";
+                header.style.background = "rgba(30, 41, 59, 0.96)";
                 headerIcon.className = "fa-solid fa-gear text-slate-300";
                 headerTitleText.innerText = "යෙදුම් සැකසුම්";
-                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-800 dark:text-slate-200 bg-slate-200/80 dark:bg-slate-800/80 transition-all font-bold scale-105";
+                btn.className = "flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-800 dark:text-slate-100 bg-slate-200/90 dark:bg-slate-800 transition-all font-bold scale-105";
             }
+        }
+
+        function shiftAttendanceDate(days) {
+            const input = document.getElementById('attendanceDate');
+            const d = input.value ? new Date(input.value + 'T00:00:00') : new Date();
+            d.setDate(d.getDate() + days);
+            input.value = d.toISOString().split('T')[0];
+            loadAttendanceData();
+        }
+
+        function shiftReportMonth(delta) {
+            const input = document.getElementById('reportMonthSelect');
+            const [y, m] = (input.value || new Date().toISOString().slice(0, 7)).split('-').map(Number);
+            const d = new Date(y, m - 1 + delta, 1);
+            input.value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            renderReports();
         }
 
         function setShiftMode(shift) {
@@ -544,14 +1034,14 @@
             const indicator = document.getElementById('currentShiftTitleIndicator');
 
             if (shift === 'day') {
-                dayBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg bg-sky-600 text-white shadow-sm flex items-center justify-center gap-1.5";
-                nightBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 flex items-center justify-center gap-1.5";
-                indicator.className = "text-sky-600 dark:text-sky-400";
+                dayBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg bg-sky-700 text-white shadow-sm flex items-center justify-center gap-1.5";
+                nightBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg text-slate-600 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1.5";
+                indicator.className = "text-sky-600 dark:text-sky-300";
                 indicator.innerHTML = `<i class="fa-solid fa-sun"></i> දිවා වැඩ මුරය`;
             } else {
-                nightBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg bg-purple-600 text-white shadow-sm flex items-center justify-center gap-1.5";
-                dayBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 flex items-center justify-center gap-1.5";
-                indicator.className = "text-purple-600 dark:text-purple-400";
+                nightBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg bg-purple-700 text-white shadow-sm flex items-center justify-center gap-1.5";
+                dayBtn.className = "flex-1 sm:flex-none px-4 py-1.5 text-xs font-bold rounded-lg text-slate-600 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-1.5";
+                indicator.className = "text-purple-600 dark:text-purple-300";
                 indicator.innerHTML = `<i class="fa-solid fa-moon"></i> රාත්‍රි වැඩ මුරය`;
             }
             loadAttendanceData();
@@ -577,7 +1067,7 @@
             });
 
             if (eligibleEmployees.length === 0) {
-                container.innerHTML = `<div class="p-6 text-center text-xs text-slate-400">මෙම වැඩ මුරයට අදාළ සේවකයන් නොමැත.</div>`;
+                container.innerHTML = `<div class="p-6 text-center text-xs text-slate-500 dark:text-slate-300">මෙම වැඩ මුරයට අදාළ සේවකයන් නොමැත.</div>`;
                 document.getElementById('attendanceCount').innerText = `0 / 0`;
                 updateStats(0, 0, 0);
                 return;
@@ -603,30 +1093,30 @@
                 else if (status === 'leave') leaveCount++;
 
                 const div = document.createElement('div');
-                div.className = "px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:bg-white/40 dark:hover:bg-slate-800/40 transition-colors";
-                
+                div.className = "px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:bg-white/40 dark:hover:bg-slate-800/60 transition-colors";
+
                 div.innerHTML = `
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all shadow-sm ${getStatusBadgeClass(status)}">
                             ${getStatusIcon(status)}
                         </div>
                         <div>
-                            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200">${emp.name} <span class="text-[10px] bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 px-1.5 py-0.5 rounded font-mono ml-1">${emp.empNo}</span></h4>
+                            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100">${emp.name} <span class="text-[10px] bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-200 px-1.5 py-0.5 rounded font-mono ml-1">${emp.empNo}</span></h4>
                             <div class="flex items-center gap-2 mt-0.5">
-                                <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">${emp.role || 'සේවක'}</span>
-                                ${emp.phone ? `<a href="tel:${extractPhone(emp.phone)}" class="text-[10px] text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"><i class="fa-solid fa-phone"></i> ${emp.phone}</a>` : ''}
+                                <span class="text-[10px] text-emerald-700 dark:text-emerald-300 font-medium">${emp.role || 'සේවක'}</span>
+                                ${emp.phone ? `<a href="tel:${extractPhone(emp.phone)}" class="text-[10px] text-indigo-600 dark:text-indigo-300 hover:underline flex items-center gap-1"><i class="fa-solid fa-phone"></i> ${emp.phone}</a>` : ''}
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-center gap-1.5 w-full sm:w-auto justify-end">
-                        <button ${isLocked ? 'disabled' : ''} onclick="setEmployeeStatus('${selectedDate}', '${emp.id}', 'present')" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${status === 'present' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-emerald-50 border border-slate-200 dark:border-slate-700'} ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}">
+                        <button ${isLocked ? 'disabled' : ''} onclick="setEmployeeStatus('${selectedDate}', '${emp.id}', 'present')" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${status === 'present' ? 'bg-emerald-700 text-white shadow-sm' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600'} ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}">
                             <i class="fa-solid fa-check"></i> පැමිණ ඇත
                         </button>
-                        <button ${isLocked ? 'disabled' : ''} onclick="setEmployeeStatus('${selectedDate}', '${emp.id}', 'absent')" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${status === 'absent' ? 'bg-rose-600 text-white shadow-sm' : 'bg-white/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-rose-50 border border-slate-200 dark:border-slate-700'} ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}">
+                        <button ${isLocked ? 'disabled' : ''} onclick="setEmployeeStatus('${selectedDate}', '${emp.id}', 'absent')" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${status === 'absent' ? 'bg-rose-600 text-white shadow-sm' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600'} ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}">
                             <i class="fa-solid fa-xmark"></i> නොපැමිණි
                         </button>
-                        <button ${isLocked ? 'disabled' : ''} onclick="setEmployeeStatus('${selectedDate}', '${emp.id}', 'leave')" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${status === 'leave' ? 'bg-amber-600 text-white shadow-sm' : 'bg-white/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-amber-50 border border-slate-200 dark:border-slate-700'} ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}">
+                        <button ${isLocked ? 'disabled' : ''} onclick="setEmployeeStatus('${selectedDate}', '${emp.id}', 'leave')" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${status === 'leave' ? 'bg-amber-700 text-white shadow-sm' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-600'} ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}">
                             <i class="fa-solid fa-calendar-minus"></i> නිවාඩු
                         </button>
                     </div>
@@ -640,21 +1130,23 @@
         }
 
         function toggleLockAttendance() {
-            const selectedDate = document.getElementById('attendanceDate').value;
-            if (!selectedDate) return;
+            requireAuthThen(() => {
+                const selectedDate = document.getElementById('attendanceDate').value;
+                if (!selectedDate) return;
 
-            const isLocked = lockedDates[selectedDate] === true;
-            if (isLocked) {
-                if (confirm('මෙම දිනය නැවත අගුළු හැරීමට (Unlock) අවශ්‍ය බව ස්ථිරද?')) {
-                    lockedDates[selectedDate] = false;
+                const isLocked = lockedDates[selectedDate] === true;
+                if (isLocked) {
+                    if (confirm('මෙම දිනය නැවත අගුළු හැරීමට (Unlock) අවශ්‍ය බව ස්ථිරද?')) {
+                        lockedDates[selectedDate] = false;
+                    }
+                } else {
+                    if (confirm('මෙම දිනයේ පැමිණීම් සටහන් අගුළු දැමීමට (Lock) අවශ්‍ය බව ස්ථිරද? අගුළු දැමූ පසු වෙනස් කළ නොහැක.')) {
+                        lockedDates[selectedDate] = true;
+                    }
                 }
-            } else {
-                if (confirm('මෙම දිනයේ පැමිණීම් සටහන් අගුළු දැමීමට (Lock) අවශ්‍ය බව ස්ථිරද? අගුළු දැමූ පසු වෙනස් කළ නොහැක.')) {
-                    lockedDates[selectedDate] = true;
-                }
-            }
-            saveToStorage();
-            loadAttendanceData();
+                saveToStorage();
+                loadAttendanceData();
+            });
         }
 
         function updateLockUI(isLocked) {
@@ -666,13 +1158,13 @@
                 lockBtn.className = "bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl border border-rose-500 shadow-sm flex items-center gap-1.5 transition-colors";
                 lockBtn.innerHTML = `<i class="fa-solid fa-lock"></i> අගුළු හැරීමට (Unlock)`;
                 bulkContainer.classList.add('hidden');
-                lockBadge.className = "text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded font-bold border border-rose-200 dark:border-rose-800";
+                lockBadge.className = "text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-200 px-2 py-0.5 rounded font-bold border border-rose-200 dark:border-rose-800";
                 lockBadge.innerHTML = `<i class="fa-solid fa-lock"></i> අගුළු දමා ඇත (Locked)`;
             } else {
-                lockBtn.className = "bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl border border-emerald-500 shadow-sm flex items-center gap-1.5 transition-colors";
+                lockBtn.className = "bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl border border-emerald-600 shadow-sm flex items-center gap-1.5 transition-colors";
                 lockBtn.innerHTML = `<i class="fa-solid fa-lock-open"></i> අගුළු දමන්න (Lock)`;
                 bulkContainer.classList.remove('hidden');
-                lockBadge.className = "text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded font-bold border border-emerald-200 dark:border-emerald-800";
+                lockBadge.className = "text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-200 px-2 py-0.5 rounded font-bold border border-emerald-200 dark:border-emerald-800";
                 lockBadge.innerHTML = `<i class="fa-solid fa-lock-open"></i> විවෘතයි (Unlocked)`;
             }
         }
@@ -684,9 +1176,9 @@
         }
 
         function getStatusIcon(status) {
-            if (status === 'present') return '<i class="fa-solid fa-check text-emerald-600 dark:text-emerald-400"></i>';
-            if (status === 'absent') return '<i class="fa-solid fa-xmark text-rose-600 dark:text-rose-400"></i>';
-            return '<i class="fa-solid fa-bed text-amber-600 dark:text-amber-400"></i>';
+            if (status === 'present') return '<i class="fa-solid fa-check text-emerald-600 dark:text-emerald-300"></i>';
+            if (status === 'absent') return '<i class="fa-solid fa-xmark text-rose-600 dark:text-rose-300"></i>';
+            return '<i class="fa-solid fa-bed text-amber-600 dark:text-amber-300"></i>';
         }
 
         function updateStats(present, absent, leave) {
@@ -696,28 +1188,30 @@
         }
 
         function setEmployeeStatus(date, empId, status) {
-            if (lockedDates[date]) return; 
-            if (!attendance[date]) attendance[date] = {};
-            if (!attendance[date][empId]) attendance[date][empId] = { day: 'present', night: 'present' };
-            
-            attendance[date][empId][currentShift] = status;
-            loadAttendanceData();
+            if (lockedDates[date]) return;
+            requireAuthThen(() => {
+                if (!attendance[date]) attendance[date] = {};
+                if (!attendance[date][empId]) attendance[date][empId] = { day: 'present', night: 'present' };
+                attendance[date][empId][currentShift] = status;
+                loadAttendanceData();
+            });
         }
 
         function markAllCurrentShift(status) {
             const selectedDate = document.getElementById('attendanceDate').value;
-            if (lockedDates[selectedDate]) return; 
-            if (!attendance[selectedDate]) attendance[selectedDate] = {};
-            
-            employees.forEach(emp => {
-                const sType = emp.shiftType || 'both';
-                const matchesShift = (sType === 'both') || (sType === currentShift);
-                if (matchesShift && (!emp.joinDate || selectedDate >= emp.joinDate)) {
-                    if (!attendance[selectedDate][emp.id]) attendance[selectedDate][emp.id] = { day: 'present', night: 'present' };
-                    attendance[selectedDate][emp.id][currentShift] = status;
-                }
+            if (lockedDates[selectedDate]) return;
+            requireAuthThen(() => {
+                if (!attendance[selectedDate]) attendance[selectedDate] = {};
+                employees.forEach(emp => {
+                    const sType = emp.shiftType || 'both';
+                    const matchesShift = (sType === 'both') || (sType === currentShift);
+                    if (matchesShift && (!emp.joinDate || selectedDate >= emp.joinDate)) {
+                        if (!attendance[selectedDate][emp.id]) attendance[selectedDate][emp.id] = { day: 'present', night: 'present' };
+                        attendance[selectedDate][emp.id][currentShift] = status;
+                    }
+                });
+                loadAttendanceData();
             });
-            loadAttendanceData();
         }
 
         // --- EMPLOYEES ---
@@ -728,28 +1222,33 @@
             if (!container) return;
             container.innerHTML = '';
 
-            const filtered = employees.filter(e => 
-                e.name.toLowerCase().includes(search) || 
-                e.empNo.toLowerCase().includes(search) || 
+            const filtered = employees.filter(e =>
+                e.name.toLowerCase().includes(search) ||
+                e.empNo.toLowerCase().includes(search) ||
                 (e.nic && e.nic.toLowerCase().includes(search))
             );
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="p-6 text-center text-xs text-slate-500 dark:text-slate-300">සේවකයන් හමු නොවීය.</div>`;
+                return;
+            }
 
             filtered.forEach(emp => {
                 const shiftTypeText = emp.shiftType === 'day' ? 'දිවා පමණයි' : (emp.shiftType === 'night' ? 'රාත්‍රි පමණයි' : 'දිවා/රාත්‍රි දෙකම');
                 const div = document.createElement('div');
-                div.className = "px-4 py-3 flex items-center justify-between hover:bg-white/40 dark:hover:bg-slate-800/40 transition-colors";
+                div.className = "px-4 py-3 flex items-center justify-between hover:bg-white/40 dark:hover:bg-slate-800/60 transition-colors";
                 div.innerHTML = `
                     <div class="flex items-center gap-3 cursor-pointer" onclick="viewProfile('${emp.id}')">
-                        <div class="w-9 h-9 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold text-xs">${emp.name.charAt(0)}</div>
+                        <div class="w-9 h-9 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-200 flex items-center justify-center font-bold text-xs">${emp.name.charAt(0)}</div>
                         <div>
-                            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200">${emp.name} <span class="text-[10px] text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded ml-1">${emp.role || 'සේවක'}</span></h4>
-                            <span class="text-[10px] text-slate-500">අංකය: <b class="font-mono text-indigo-600 dark:text-indigo-400">${emp.empNo}</b> | මුරය: <b class="text-purple-600">${shiftTypeText}</b></span>
+                            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100">${emp.name} <span class="text-[10px] text-emerald-700 dark:text-emerald-200 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded ml-1">${emp.role || 'සේවක'}</span></h4>
+                            <span class="text-[10px] text-slate-600 dark:text-slate-300">අංකය: <b class="font-mono text-indigo-600 dark:text-indigo-300">${emp.empNo}</b> | මුරය: <b class="text-purple-700 dark:text-purple-300">${shiftTypeText}</b></span>
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5">
-                        ${emp.phone ? `<a href="tel:${extractPhone(emp.phone)}" class="bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-xs px-2.5 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-800"><i class="fa-solid fa-phone"></i></a>` : ''}
-                        <button onclick="editEmployee('${emp.id}')" class="bg-white/80 dark:bg-slate-800 hover:bg-white text-slate-700 dark:text-slate-300 text-xs px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteEmployee('${emp.id}')" class="bg-rose-50 dark:bg-rose-950 hover:bg-rose-100 text-rose-700 dark:text-rose-300 text-xs px-2.5 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800"><i class="fa-solid fa-trash"></i></button>
+                        ${emp.phone ? `<a href="tel:${extractPhone(emp.phone)}" class="bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-200 text-xs px-2.5 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-700"><i class="fa-solid fa-phone"></i></a>` : ''}
+                        <button onclick="editEmployee('${emp.id}')" class="bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-100 text-xs px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-600"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteEmployee('${emp.id}')" class="bg-rose-50 dark:bg-rose-950 hover:bg-rose-100 text-rose-700 dark:text-rose-200 text-xs px-2.5 py-1.5 rounded-xl border border-rose-200 dark:border-rose-700"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -759,7 +1258,7 @@
         function openEmployeeModal(id = null) {
             document.getElementById('editEmployeeId').value = id || '';
             document.getElementById('modalTitle').innerText = id ? 'සේවක තොරතුරු සංස්කරණය' : 'නව සේවකයෙක් එකතු කරන්න';
-            
+
             const now = new Date();
             const defaultJoin = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
 
@@ -780,9 +1279,9 @@
                 ['empName', 'empNo', 'empRole', 'empNic', 'empPhone', 'empEmergency', 'empBlood', 'empDob', 'empAddress'].forEach(i => document.getElementById(i).value = '');
                 document.getElementById('empShiftType').value = 'both';
                 document.getElementById('empJoinDate').value = defaultJoin;
-                
+
                 let nextNum = 1;
-                if(employees.length > 0) {
+                if (employees.length > 0) {
                     const lastEmp = employees[employees.length - 1];
                     const extracted = parseInt((lastEmp.empNo || '').replace(/\D/g, '')) || employees.length;
                     nextNum = extracted + 1;
@@ -850,17 +1349,18 @@
             if (!emp) return;
             const shiftTypeText = emp.shiftType === 'day' ? 'දිවා පමණයි' : (emp.shiftType === 'night' ? 'රාත්‍රි පමණයි' : 'දිවා/රාත්‍රි දෙකම');
             document.getElementById('profileContent').innerHTML = `
-                <div class="text-center pb-3 border-b dark:border-slate-800">
+                <div class="text-center pb-3 border-b dark:border-slate-700">
                     <h4 class="font-bold text-slate-800 dark:text-slate-100 text-sm">${emp.name}</h4>
-                    <p class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">${emp.role || 'සේවක'} (<span class="font-mono">${emp.empNo}</span>)</p>
+                    <p class="text-[11px] text-emerald-700 dark:text-emerald-300 font-medium">${emp.role || 'සේවක'} (<span class="font-mono">${emp.empNo}</span>)</p>
                 </div>
-                <div class="space-y-1.5 text-xs">
+                <div class="space-y-1.5 text-xs text-slate-700 dark:text-slate-200">
                     <p><b>වැඩ මුරය:</b> ${shiftTypeText}</p>
                     <p><b>බැඳුණු දිනය:</b> ${emp.joinDate || '-'}</p>
                     <p><b>NIC:</b> ${emp.nic || '-'}</p>
                     <p><b>දුරකථන:</b> ${emp.phone || '-'}</p>
                     <p><b>හදිසි ඇමතුම්:</b> ${emp.emergency || '-'}</p>
                     <p><b>රුධිර වර්ගය:</b> ${emp.blood || '-'}</p>
+                    <p><b>උපන් දිනය:</b> ${emp.dob || '-'}</p>
                     <p><b>ලිපිනය:</b> ${emp.address || '-'}</p>
                 </div>
             `;
@@ -883,7 +1383,6 @@
             const [year, month] = monthInput.split('-').map(Number);
             const daysInMonth = new Date(year, month, 0).getDate();
 
-            // Build Days Header for both tables
             let headHTML = `
                 <th class="p-2.5 font-semibold text-center whitespace-nowrap">අංකය</th>
                 <th class="p-2.5 font-semibold whitespace-nowrap">සේවකයා</th>
@@ -897,85 +1396,57 @@
             dayTbody.innerHTML = '';
             nightTbody.innerHTML = '';
 
-            // Filter Day employees
             const dayEmployees = employees.filter(emp => {
                 const sType = emp.shiftType || 'both';
                 return sType === 'both' || sType === 'day';
             });
 
-            // Filter Night employees
             const nightEmployees = employees.filter(emp => {
                 const sType = emp.shiftType || 'both';
                 return sType === 'both' || sType === 'night';
             });
 
-            // Render Day Report Table
-            dayEmployees.forEach(emp => {
-                let rowHTML = `
-                    <tr class="hover:bg-white/40 dark:hover:bg-slate-800/40 border-b border-sky-100/60 dark:border-slate-800">
-                        <td class="p-2 text-center font-mono font-bold text-indigo-700 dark:text-indigo-400 whitespace-nowrap">${emp.empNo}</td>
-                        <td class="p-2 font-semibold text-slate-800 dark:text-slate-200 whitespace-nowrap">${emp.name}</td>
-                `;
-
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    let cellContent = '-';
-                    let cellClass = 'text-slate-300 dark:text-slate-600';
-
-                    if (emp.joinDate && dateKey < emp.joinDate) {
-                        cellContent = '';
-                    } else if (attendance[dateKey] && attendance[dateKey][emp.id]) {
-                        const st = attendance[dateKey][emp.id]['day'];
-                        if (st === 'present') {
-                            cellContent = '✔';
-                            cellClass = 'text-emerald-600 font-bold bg-emerald-50 dark:bg-emerald-950/40 rounded';
-                        } else if (st === 'absent') {
-                            cellContent = '✘';
-                            cellClass = 'text-rose-600 font-bold bg-rose-50 dark:bg-rose-950/40 rounded';
-                        } else if (st === 'leave') {
-                            cellContent = 'L';
-                            cellClass = 'text-amber-600 font-bold bg-amber-50 dark:bg-amber-950/40 rounded';
-                        }
-                    }
-                    rowHTML += `<td class="p-1 text-center font-mono text-[11px] ${cellClass}">${cellContent}</td>`;
+            function buildRows(targetList, tbody, shiftKey, rowBorder) {
+                if (targetList.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="${daysInMonth + 2}" class="p-5 text-center text-xs text-slate-500 dark:text-slate-300">සේවක දත්ත නොමැත.</td></tr>`;
+                    return;
                 }
-                rowHTML += `</tr>`;
-                dayTbody.insertAdjacentHTML('beforeend', rowHTML);
-            });
+                targetList.forEach(emp => {
+                    let rowHTML = `
+                        <tr class="hover:bg-white/40 dark:hover:bg-slate-800/60 border-b ${rowBorder}">
+                            <td class="p-2 text-center font-mono font-bold text-indigo-700 dark:text-indigo-300 whitespace-nowrap">${emp.empNo}</td>
+                            <td class="p-2 font-semibold text-slate-800 dark:text-slate-100 whitespace-nowrap">${emp.name}</td>
+                    `;
 
-            // Render Night Report Table
-            nightEmployees.forEach(emp => {
-                let rowHTML = `
-                    <tr class="hover:bg-white/40 dark:hover:bg-slate-800/40 border-b border-purple-100/60 dark:border-slate-800">
-                        <td class="p-2 text-center font-mono font-bold text-indigo-700 dark:text-indigo-400 whitespace-nowrap">${emp.empNo}</td>
-                        <td class="p-2 font-semibold text-slate-800 dark:text-slate-200 whitespace-nowrap">${emp.name}</td>
-                `;
+                    for (let day = 1; day <= daysInMonth; day++) {
+                        const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        let cellContent = '-';
+                        let cellClass = 'text-slate-400 dark:text-slate-400';
 
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    let cellContent = '-';
-                    let cellClass = 'text-slate-300 dark:text-slate-600';
-
-                    if (emp.joinDate && dateKey < emp.joinDate) {
-                        cellContent = '';
-                    } else if (attendance[dateKey] && attendance[dateKey][emp.id]) {
-                        const st = attendance[dateKey][emp.id]['night'];
-                        if (st === 'present') {
-                            cellContent = '✔';
-                            cellClass = 'text-emerald-600 font-bold bg-emerald-50 dark:bg-emerald-950/40 rounded';
-                        } else if (st === 'absent') {
-                            cellContent = '✘';
-                            cellClass = 'text-rose-600 font-bold bg-rose-50 dark:bg-rose-950/40 rounded';
-                        } else if (st === 'leave') {
-                            cellContent = 'L';
-                            cellClass = 'text-amber-600 font-bold bg-amber-50 dark:bg-amber-950/40 rounded';
+                        if (emp.joinDate && dateKey < emp.joinDate) {
+                            cellContent = '';
+                        } else if (attendance[dateKey] && attendance[dateKey][emp.id]) {
+                            const st = attendance[dateKey][emp.id][shiftKey];
+                            if (st === 'present') {
+                                cellContent = '✔';
+                                cellClass = 'text-emerald-700 dark:text-emerald-300 font-bold bg-emerald-50 dark:bg-emerald-950/60 rounded';
+                            } else if (st === 'absent') {
+                                cellContent = '✘';
+                                cellClass = 'text-rose-700 dark:text-rose-300 font-bold bg-rose-50 dark:bg-rose-950/60 rounded';
+                            } else if (st === 'leave') {
+                                cellContent = 'L';
+                                cellClass = 'text-amber-700 dark:text-amber-300 font-bold bg-amber-50 dark:bg-amber-950/60 rounded';
+                            }
                         }
+                        rowHTML += `<td class="p-1 text-center font-mono text-[11px] ${cellClass}">${cellContent}</td>`;
                     }
-                    rowHTML += `<td class="p-1 text-center font-mono text-[11px] ${cellClass}">${cellContent}</td>`;
-                }
-                rowHTML += `</tr>`;
-                nightTbody.insertAdjacentHTML('beforeend', rowHTML);
-            });
+                    rowHTML += `</tr>`;
+                    tbody.insertAdjacentHTML('beforeend', rowHTML);
+                });
+            }
+
+            buildRows(dayEmployees, dayTbody, 'day', 'border-sky-100/60 dark:border-slate-700');
+            buildRows(nightEmployees, nightTbody, 'night', 'border-purple-100/60 dark:border-slate-700');
         }
 
         // --- CSV EXPORTS ---
@@ -1042,6 +1513,7 @@
 
         function importDataFromJSON(event) {
             const file = event.target.files[0];
+            event.target.value = '';
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -1060,7 +1532,7 @@
                     } else {
                         alert('වලංගු නොවන Backup ගොනුවකි.');
                     }
-                } catch(err) {
+                } catch (err) {
                     alert('ගොනුව කියවීමේ දෝෂයක් ඇත.');
                 }
             };
@@ -1068,16 +1540,20 @@
         }
 
         function resetAllData() {
-            if (confirm('සියලුම සේවක සහ පැමිණීමේ දත්ත මකා දැමීමට අවශ්‍ය බව ස්ථිරද? මෙය නැවත ලබාගත නොහැක!')) {
-                localStorage.clear();
-                employees = [];
-                attendance = {};
-                lockedDates = {};
-                loadAttendanceData();
-                renderEmployeesList();
-                renderReports();
-                alert('දත්ත සියල්ල ඉවත් කරන ලදී.');
-            }
+            requireAuthThen(() => {
+                if (confirm('සියලුම සේවක සහ පැමිණීමේ දත්ත මකා දැමීමට අවශ්‍ය බව ස්ථිරද? මෙය නැවත ලබාගත නොහැක!')) {
+                    localStorage.removeItem(STORAGE_KEY_EMP);
+                    localStorage.removeItem(STORAGE_KEY_ATT);
+                    localStorage.removeItem(STORAGE_KEY_LOCK);
+                    employees = [];
+                    attendance = {};
+                    lockedDates = {};
+                    loadAttendanceData();
+                    renderEmployeesList();
+                    renderReports();
+                    alert('දත්ත සියල්ල ඉවත් කරන ලදී.');
+                }
+            });
         }
 
         function downloadAppFile() {
