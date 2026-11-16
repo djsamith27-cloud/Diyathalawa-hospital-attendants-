@@ -43,8 +43,26 @@ class AttendanceRepository(
 
     val isDarkTheme: Flow<Boolean> = preferences.isDarkTheme
 
+    val isPasswordEnabled: Flow<Boolean> = preferences.isPasswordEnabled
+
+    val isWelcomeSoundEnabled: Flow<Boolean> = preferences.isWelcomeSoundEnabled
+
     suspend fun setDarkTheme(isDark: Boolean) {
         preferences.setDarkTheme(isDark)
+    }
+
+    suspend fun setWelcomeSoundEnabled(enabled: Boolean) {
+        preferences.setWelcomeSoundEnabled(enabled)
+    }
+
+    suspend fun verifyPassword(rawPassword: String): Boolean = preferences.verifyPassword(rawPassword)
+
+    suspend fun setPassword(rawPassword: String) {
+        preferences.setPassword(rawPassword)
+    }
+
+    suspend fun clearPassword() {
+        preferences.clearPassword()
     }
 
     suspend fun ensureInitialSeed() {

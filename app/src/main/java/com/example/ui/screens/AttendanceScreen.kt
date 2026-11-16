@@ -75,6 +75,10 @@ import com.example.ui.theme.LocalAttendanceColors
 @Composable
 fun AttendanceScreen(
     uiState: AttendanceUiState,
+    isPasswordEnabled: Boolean,
+    isAdminUnlocked: Boolean,
+    onRequestUnlock: (onUnlocked: () -> Unit) -> Unit,
+    onLockAdminSession: () -> Unit,
     onSelectDate: (String) -> Unit,
     onShiftDateByDays: (Long) -> Unit,
     onSetShiftMode: (ShiftMode) -> Unit,
@@ -85,6 +89,7 @@ fun AttendanceScreen(
     modifier: Modifier = Modifier
 ) {
     val semantic = LocalAttendanceColors.current
+    val requiresAuth = isPasswordEnabled && !isAdminUnlocked
     var showDatePicker by remember { mutableStateOf(false) }
     var showLockConfirmDialog by remember { mutableStateOf(false) }
 
@@ -149,6 +154,72 @@ fun AttendanceScreen(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        if (isPasswordEnabled) {
+            item {
+                GlassCard(
+                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
+                    borderColor = if (requiresAuth) {
+                        semantic.leave.copy(alpha = 0.45f)
+                    } else {
+                        semantic.present.copy(alpha = 0.45f)
+                    }
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(
+                                imageVector = if (requiresAuth) Icons.Filled.Lock else Icons.Filled.LockOpen,
+                                contentDescription = null,
+                                tint = if (requiresAuth) semantic.leave else semantic.present,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Text(
+                                text = if (requiresAuth) {
+                                    "වෙනස්කම් කිරීමට මුරපදය අවශ්‍යයි"
+                                } else {
+                                    "මුරපදය තහවුරුයි — වෙනස්කම් කළ හැක"
+                                },
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Surface(
+                            onClick = {
+                                if (requiresAuth) {
+                                    onRequestUnlock {}
+                                } else {
+                                    onLockAdminSession()
+                                }
+                            },
+                            shape = RoundedCornerShape(10.dp),
+                            color = if (requiresAuth) MaterialTheme.colorScheme.primary else semantic.presentContainer,
+                            contentColor = if (requiresAuth) MaterialTheme.colorScheme.onPrimary else semantic.onPresentContainer,
+                            modifier = Modifier
+                                .minimumInteractiveComponentSize()
+                                .testTag("attendance_auth_toggle_button")
+                        ) {
+                            Text(
+                                text = if (requiresAuth) "අගුළු හරින්න" else "අගුළු දමන්න",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         // Controls Card: Date, Shift Switcher, Bulk Actions, Lock Toggle
         item {
             GlassCard {
@@ -169,6 +240,7 @@ fun AttendanceScreen(
                                 onClick = { onShiftDateByDays(-1) },
                                 shape = RoundedCornerShape(12.dp),
                                 color = MaterialTheme.colorScheme.surfaceVariant,
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.minimumInteractiveComponentSize()
                             ) {
                                 Box(
@@ -178,6 +250,7 @@ fun AttendanceScreen(
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                                         contentDescription = "පෙර දිනය",
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.size(20.dp)
                                     )
                                 }
@@ -187,6 +260,7 @@ fun AttendanceScreen(
                                 onClick = { showDatePicker = true },
                                 shape = RoundedCornerShape(12.dp),
                                 color = MaterialTheme.colorScheme.surface,
+                                contentColor = MaterialTheme.colorScheme.onSurface,
                                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                                 modifier = Modifier
                                     .weight(1f)
@@ -202,7 +276,8 @@ fun AttendanceScreen(
                                         text = uiState.selectedDate,
                                         fontFamily = JetBrainsMonoFontFamily,
                                         fontWeight = FontWeight.SemiBold,
-                                        fontSize = 14.sp
+                                        fontSize = 14.sp,
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Icon(
                                         imageVector = Icons.Filled.CalendarToday,
@@ -217,6 +292,7 @@ fun AttendanceScreen(
                                 onClick = { onShiftDateByDays(1) },
                                 shape = RoundedCornerShape(12.dp),
                                 color = MaterialTheme.colorScheme.surfaceVariant,
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.minimumInteractiveComponentSize()
                             ) {
                                 Box(
@@ -226,6 +302,7 @@ fun AttendanceScreen(
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                                         contentDescription = "ඊළඟ දිනය",
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.size(20.dp)
                                     )
                                 }
@@ -255,7 +332,7 @@ fun AttendanceScreen(
                                     label = "දිවා (Day)",
                                     icon = Icons.Filled.WbSunny,
                                     selected = uiState.currentShift == ShiftMode.DAY,
-                                    selectedColor = semantic.dayShift,
+                                    selectedColor = semantic.dayShiftSolid,
                                     onClick = { onSetShiftMode(ShiftMode.DAY) },
                                     modifier = Modifier
                                         .weight(1f)
@@ -265,7 +342,7 @@ fun AttendanceScreen(
                                     label = "රාත්‍රි (Night)",
                                     icon = Icons.Filled.NightsStay,
                                     selected = uiState.currentShift == ShiftMode.NIGHT,
-                                    selectedColor = semantic.nightShift,
+                                    selectedColor = semantic.nightShiftSolid,
                                     onClick = { onSetShiftMode(ShiftMode.NIGHT) },
                                     modifier = Modifier
                                         .weight(1f)
@@ -283,7 +360,13 @@ fun AttendanceScreen(
                     ) {
                         if (!uiState.isLocked) {
                             Surface(
-                                onClick = { onMarkAll(AttendanceStatus.PRESENT) },
+                                onClick = {
+                                    if (requiresAuth) {
+                                        onRequestUnlock { onMarkAll(AttendanceStatus.PRESENT) }
+                                    } else {
+                                        onMarkAll(AttendanceStatus.PRESENT)
+                                    }
+                                },
                                 shape = RoundedCornerShape(12.dp),
                                 color = semantic.presentContainer,
                                 border = BorderStroke(1.dp, semantic.present.copy(alpha = 0.35f)),
@@ -315,7 +398,13 @@ fun AttendanceScreen(
                             }
 
                             Surface(
-                                onClick = { onMarkAll(AttendanceStatus.ABSENT) },
+                                onClick = {
+                                    if (requiresAuth) {
+                                        onRequestUnlock { onMarkAll(AttendanceStatus.ABSENT) }
+                                    } else {
+                                        onMarkAll(AttendanceStatus.ABSENT)
+                                    }
+                                },
                                 shape = RoundedCornerShape(12.dp),
                                 color = semantic.absentContainer,
                                 border = BorderStroke(1.dp, semantic.absent.copy(alpha = 0.35f)),
@@ -348,9 +437,16 @@ fun AttendanceScreen(
                         }
 
                         Surface(
-                            onClick = { showLockConfirmDialog = true },
+                            onClick = {
+                                if (requiresAuth) {
+                                    onRequestUnlock { showLockConfirmDialog = true }
+                                } else {
+                                    showLockConfirmDialog = true
+                                }
+                            },
                             shape = RoundedCornerShape(12.dp),
-                            color = if (uiState.isLocked) semantic.absent else semantic.present,
+                            color = if (uiState.isLocked) semantic.absentSolid else semantic.presentSolid,
+                            contentColor = Color.White,
                             modifier = Modifier
                                 .then(if (uiState.isLocked) Modifier.fillMaxWidth() else Modifier)
                                 .minimumInteractiveComponentSize()
@@ -522,7 +618,13 @@ fun AttendanceScreen(
             AttendanceEmployeeCard(
                 row = row,
                 isLocked = uiState.isLocked,
-                onStatusSelected = { status -> onSetEmployeeStatus(row.employee.id, status) },
+                onStatusSelected = { status ->
+                    if (requiresAuth) {
+                        onRequestUnlock { onSetEmployeeStatus(row.employee.id, status) }
+                    } else {
+                        onSetEmployeeStatus(row.employee.id, status)
+                    }
+                },
                 onDialPhone = onDialPhone
             )
         }
@@ -542,6 +644,7 @@ private fun ShiftPillButton(
         onClick = onClick,
         shape = RoundedCornerShape(10.dp),
         color = if (selected) selectedColor else Color.Transparent,
+        contentColor = if (selected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
         shadowElevation = if (selected) 2.dp else 0.dp,
         modifier = modifier.minimumInteractiveComponentSize()
     ) {
@@ -581,6 +684,7 @@ private fun StatCounterCard(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         color = semantic.cardSurface,
+        contentColor = MaterialTheme.colorScheme.onSurface,
         border = BorderStroke(1.dp, semantic.cardBorder),
         shadowElevation = 2.dp
     ) {
@@ -731,7 +835,7 @@ private fun AttendanceEmployeeCard(
                     label = "පැමිණ ඇත",
                     icon = Icons.Filled.Check,
                     selected = row.status == AttendanceStatus.PRESENT,
-                    activeColor = semantic.present,
+                    activeColor = semantic.presentSolid,
                     enabled = !isLocked,
                     onClick = { onStatusSelected(AttendanceStatus.PRESENT) },
                     modifier = Modifier.weight(1f)
@@ -740,7 +844,7 @@ private fun AttendanceEmployeeCard(
                     label = "නොපැමිණි",
                     icon = Icons.Filled.Close,
                     selected = row.status == AttendanceStatus.ABSENT,
-                    activeColor = semantic.absent,
+                    activeColor = semantic.absentSolid,
                     enabled = !isLocked,
                     onClick = { onStatusSelected(AttendanceStatus.ABSENT) },
                     modifier = Modifier.weight(1f)
@@ -749,7 +853,7 @@ private fun AttendanceEmployeeCard(
                     label = "නිවාඩු",
                     icon = Icons.Filled.EventBusy,
                     selected = row.status == AttendanceStatus.LEAVE,
-                    activeColor = semantic.leave,
+                    activeColor = semantic.leaveSolid,
                     enabled = !isLocked,
                     onClick = { onStatusSelected(AttendanceStatus.LEAVE) },
                     modifier = Modifier.weight(1f)
@@ -774,6 +878,7 @@ private fun StatusActionChip(
         enabled = enabled,
         shape = RoundedCornerShape(12.dp),
         color = if (selected) activeColor else MaterialTheme.colorScheme.surface,
+        contentColor = if (selected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
         border = if (selected) null else BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         shadowElevation = if (selected) 2.dp else 0.dp,
         modifier = modifier

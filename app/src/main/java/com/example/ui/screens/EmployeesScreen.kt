@@ -204,7 +204,7 @@ fun EmployeesScreen(
                                 showFormDialog = true
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = semantic.present,
+                                containerColor = semantic.presentSolid,
                                 contentColor = Color.White
                             ),
                             shape = RoundedCornerShape(12.dp),
@@ -231,6 +231,7 @@ fun EmployeesScreen(
                             onClick = onExportEmployeesCsv,
                             shape = RoundedCornerShape(12.dp),
                             color = MaterialTheme.colorScheme.surfaceVariant,
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                             modifier = Modifier
                                 .minimumInteractiveComponentSize()
@@ -244,11 +245,13 @@ fun EmployeesScreen(
                                 Icon(
                                     imageVector = Icons.Filled.Download,
                                     contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Text(
                                     text = "CSV",
-                                    style = MaterialTheme.typography.labelLarge
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
@@ -378,6 +381,7 @@ private fun EmployeeListItemCard(
                     Text(
                         text = employee.name,
                         style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)
@@ -409,7 +413,7 @@ private fun EmployeeListItemCard(
                     Text(
                         text = "| $shiftTypeLabel",
                         style = MaterialTheme.typography.bodySmall,
-                        color = semantic.nightShift,
+                        color = semantic.onNightShiftContainer,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -570,6 +574,7 @@ private fun EmployeeFormDialog(
                 .padding(16.dp),
             shape = RoundedCornerShape(24.dp),
             color = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
             tonalElevation = 6.dp
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -814,7 +819,7 @@ private fun EmployeeFormDialog(
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = semantic.present,
+                            containerColor = semantic.presentSolid,
                             contentColor = Color.White
                         ),
                         shape = RoundedCornerShape(12.dp)

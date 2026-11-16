@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -83,6 +84,17 @@ class AttendanceViewModel(
 
     val isDarkTheme: StateFlow<Boolean> = repository.isDarkTheme
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    val isPasswordEnabled: StateFlow<Boolean> = repository.isPasswordEnabled
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
+    val isWelcomeSoundEnabled: StateFlow<Boolean> = repository.isWelcomeSoundEnabled
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
+
+    private val _isAdminUnlocked = MutableStateFlow(false)
+    val isAdminUnlocked: StateFlow<Boolean> = _isAdminUnlocked.asStateFlow()
+
+    private var hasPlayedStartupWelcome = false
 
     val allEmployees: StateFlow<List<EmployeeEntity>> = repository.employees
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -182,6 +194,58 @@ class AttendanceViewModel(
         viewModelScope.launch {
             repository.setDarkTheme(!isDarkTheme.value)
         }
+    }
+
+    fun setWelcomeSoundEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            repository.setWelcomeSoundEnabled(enabled)
+        }
+    }
+
+    suspend fun consumeStartupWelcomeSound(): Boolean {
+        if (hasPlayedStartupWelcome) return false
+        hasPlayedStartupWelcome = true
+        return repository.isWelcomeSoundEnabled.first()
+    }
+
+    suspend fun unlockWithPassword(password: String): Boolean {
+        val ok = repository.verifyPassword(password)
+        if (ok) {
+            _isAdminUnlocked.value = true
+            _snackbarMessages.tryEmit("මුරපදය තහවුරු විය. දැන් වෙනස්කම් සිදු කළ හැක.")
+        }
+        return ok
+    }
+
+    fun lockAdminSession() {
+        _isAdminUnlocked.value = false
+        _snackbarMessages.tryEmit("ආරක්ෂක අගුළු දමන ලදී.")
+    }
+
+    suspend fun setupPassword(newPassword: String) {
+        repository.setPassword(newPassword)
+        _isAdminUnlocked.value = true
+        _snackbarMessages.tryEmit("ආරක්ෂක මුරපදය සාර්ථකව සකසන ලදී.")
+    }
+
+    suspend fun changePassword(currentPassword: String, newPassword: String): Boolean {
+        if (!repository.verifyPassword(currentPassword)) {
+            return false
+        }
+        repository.setPassword(newPassword)
+        _isAdminUnlocked.value = true
+        _snackbarMessages.tryEmit("මුරපදය සාර්ථකව වෙනස් කරන ලදී.")
+        return true
+    }
+
+    suspend fun removePassword(currentPassword: String): Boolean {
+        if (!repository.verifyPassword(currentPassword)) {
+            return false
+        }
+        repository.clearPassword()
+        _isAdminUnlocked.value = false
+        _snackbarMessages.tryEmit("මුරපද ආරක්ෂාව ඉවත් කරන ලදී.")
+        return true
     }
 
     fun selectDate(date: String) {

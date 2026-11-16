@@ -103,6 +103,7 @@ fun ReportsScreen(
                                 onClick = { onShiftMonth(-1) },
                                 shape = RoundedCornerShape(12.dp),
                                 color = MaterialTheme.colorScheme.surfaceVariant,
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.minimumInteractiveComponentSize()
                             ) {
                                 Box(
@@ -112,6 +113,7 @@ fun ReportsScreen(
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                                         contentDescription = "පෙර මාසය",
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.size(20.dp)
                                     )
                                 }
@@ -121,6 +123,7 @@ fun ReportsScreen(
                                 onClick = { showMonthPicker = true },
                                 shape = RoundedCornerShape(12.dp),
                                 color = MaterialTheme.colorScheme.surface,
+                                contentColor = MaterialTheme.colorScheme.onSurface,
                                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                                 modifier = Modifier
                                     .weight(1f)
@@ -136,7 +139,8 @@ fun ReportsScreen(
                                         text = uiState.monthStr,
                                         fontFamily = JetBrainsMonoFontFamily,
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 14.sp
+                                        fontSize = 14.sp,
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Icon(
                                         imageVector = Icons.Filled.CalendarMonth,
@@ -151,6 +155,7 @@ fun ReportsScreen(
                                 onClick = { onShiftMonth(1) },
                                 shape = RoundedCornerShape(12.dp),
                                 color = MaterialTheme.colorScheme.surfaceVariant,
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.minimumInteractiveComponentSize()
                             ) {
                                 Box(
@@ -160,6 +165,7 @@ fun ReportsScreen(
                                     Icon(
                                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                                         contentDescription = "ඊළඟ මාසය",
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.size(20.dp)
                                     )
                                 }
@@ -174,7 +180,7 @@ fun ReportsScreen(
                         Button(
                             onClick = { onExportCsv(ShiftMode.DAY) },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = semantic.dayShift,
+                                containerColor = semantic.dayShiftSolid,
                                 contentColor = Color.White
                             ),
                             shape = RoundedCornerShape(12.dp),
@@ -200,7 +206,7 @@ fun ReportsScreen(
                         Button(
                             onClick = { onExportCsv(ShiftMode.NIGHT) },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = semantic.nightShift,
+                                containerColor = semantic.nightShiftSolid,
                                 contentColor = Color.White
                             ),
                             shape = RoundedCornerShape(12.dp),
@@ -354,7 +360,7 @@ private fun MonthlyShiftMatrixCard(
                     Column(
                         modifier = Modifier
                             .width(172.dp)
-                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
+                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.85f))
                     ) {
                         Row(
                             modifier = Modifier
@@ -403,6 +409,7 @@ private fun MonthlyShiftMatrixCard(
                                     text = row.employee.name,
                                     style = MaterialTheme.typography.bodySmall,
                                     fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier.weight(1f)
@@ -462,7 +469,7 @@ private fun MonthlyShiftMatrixCard(
                                         )
                                         ReportCellState.UNRECORDED -> Triple(
                                             "-",
-                                            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),
+                                            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.70f),
                                             Color.Transparent
                                         )
                                         ReportCellState.BEFORE_JOIN -> Triple(

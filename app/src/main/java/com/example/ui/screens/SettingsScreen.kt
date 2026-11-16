@@ -17,7 +17,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.LockOpen
+import androidx.compose.material.icons.filled.NoEncryption
 import androidx.compose.material.icons.filled.PhoneAndroid
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -27,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.minimumInteractiveComponentSize
@@ -39,19 +47,58 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.ui.components.GlassCard
+import com.example.ui.components.PasswordPromptDialog
+import com.example.ui.components.SetupOrChangePasswordDialog
 import com.example.ui.theme.LocalAttendanceColors
 
 @Composable
 fun SettingsScreen(
+    isPasswordEnabled: Boolean,
+    isAdminUnlocked: Boolean,
+    isWelcomeSoundEnabled: Boolean,
+    onToggleWelcomeSound: (Boolean) -> Unit,
+    onTestWelcomeSound: () -> Unit,
+    onRequestUnlock: (onUnlocked: () -> Unit) -> Unit,
+    onLockAdminSession: () -> Unit,
+    onSetupPassword: suspend (newPassword: String) -> Unit,
+    onChangePassword: suspend (currentPassword: String, newPassword: String) -> Boolean,
+    onRemovePassword: suspend (currentPassword: String) -> Boolean,
     onBackupClick: () -> Unit,
     onRestoreClick: () -> Unit,
     onConfirmResetAll: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val semantic = LocalAttendanceColors.current
+    val requiresAuth = isPasswordEnabled && !isAdminUnlocked
+
     var showResetConfirm by remember { mutableStateOf(false) }
+    var showSetOrChangePasswordDialog by remember { mutableStateOf(false) }
+    var showRemovePasswordDialog by remember { mutableStateOf(false) }
+
+    if (showSetOrChangePasswordDialog) {
+        SetupOrChangePasswordDialog(
+            isChangingExisting = isPasswordEnabled,
+            onDismiss = { showSetOrChangePasswordDialog = false },
+            onSetupPassword = onSetupPassword,
+            onChangePassword = onChangePassword,
+            onCompleted = { showSetOrChangePasswordDialog = false }
+        )
+    }
+
+    if (showRemovePasswordDialog) {
+        PasswordPromptDialog(
+            title = "මුරපද ආරක්ෂාව ඉවත් කිරීම",
+            message = "මුරපද ආරක්ෂාව ඉවත් කිරීමට දැනට පවතින මුරපදය ඇතුළත් කරන්න.",
+            confirmLabel = "ඉවත් කරන්න",
+            onDismiss = { showRemovePasswordDialog = false },
+            onVerify = onRemovePassword,
+            onVerified = { showRemovePasswordDialog = false }
+        )
+    }
 
     if (showResetConfirm) {
         AlertDialog(
@@ -98,6 +145,269 @@ fun SettingsScreen(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
+        // Password Lock Security Card
+        item {
+            GlassCard(
+                borderColor = if (isPasswordEnabled) {
+                    semantic.present.copy(alpha = 0.45f)
+                } else {
+                    null
+                }
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Security,
+                                contentDescription = null,
+                                tint = if (isPasswordEnabled) semantic.present else MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Text(
+                                text = "මුරපද ආරක්ෂාව (Password Lock)",
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+
+                        Surface(
+                            shape = RoundedCornerShape(100.dp),
+                            color = if (isPasswordEnabled) semantic.presentContainer else MaterialTheme.colorScheme.surfaceVariant
+                        ) {
+                            Text(
+                                text = if (isPasswordEnabled) "සක්‍රියයි" else "අක්‍රියයි",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = if (isPasswordEnabled) semantic.onPresentContainer else MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                            )
+                        }
+                    }
+
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
+
+                    Text(
+                        text = if (isPasswordEnabled) {
+                            "පැමිණීම් සටහන් කිරීමේ කොටසේ සහ සැකසුම් කොටසේ වෙනස්කම් සිදු කිරීමට මුරපදය අවශ්‍ය වේ."
+                        } else {
+                            "සේවක පැමිණීම් සටහන් කිරීමේ සහ සැකසුම් කොටසේ අනවසර වෙනස්කම් වැළැක්වීමට මුරපදයක් සකසන්න."
+                        },
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    if (!isPasswordEnabled) {
+                        Button(
+                            onClick = { showSetOrChangePasswordDialog = true },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = semantic.presentSolid,
+                                contentColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .minimumInteractiveComponentSize()
+                                .testTag("set_password_button")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Key,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "මුරපදය සකසන්න (Set Password)",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                    } else {
+                        Button(
+                            onClick = {
+                                if (requiresAuth) {
+                                    onRequestUnlock {}
+                                } else {
+                                    onLockAdminSession()
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (requiresAuth) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    semantic.presentSolid
+                                },
+                                contentColor = if (requiresAuth) {
+                                    MaterialTheme.colorScheme.onPrimary
+                                } else {
+                                    Color.White
+                                }
+                            ),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .minimumInteractiveComponentSize()
+                                .testTag("settings_auth_toggle_button")
+                        ) {
+                            Icon(
+                                imageVector = if (requiresAuth) Icons.Filled.LockOpen else Icons.Filled.Lock,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = if (requiresAuth) {
+                                    "වෙනස්කම් සඳහා අගුළු හරින්න (Unlock)"
+                                } else {
+                                    "නැවත අගුළු දමන්න (Lock Now)"
+                                },
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            OutlinedButton(
+                                onClick = { showSetOrChangePasswordDialog = true },
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.primary
+                                ),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                                shape = RoundedCornerShape(12.dp),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .minimumInteractiveComponentSize()
+                                    .testTag("change_password_button")
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Key,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = "වෙනස් කරන්න",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+
+                            Surface(
+                                onClick = { showRemovePasswordDialog = true },
+                                shape = RoundedCornerShape(12.dp),
+                                color = semantic.absentContainer,
+                                border = BorderStroke(1.dp, semantic.absent.copy(alpha = 0.4f)),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .minimumInteractiveComponentSize()
+                                    .testTag("remove_password_button")
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 12.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.NoEncryption,
+                                        contentDescription = null,
+                                        tint = semantic.onAbsentContainer,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "ඉවත් කරන්න",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = semantic.onAbsentContainer,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Welcome Sound Card
+        item {
+            GlassCard {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.VolumeUp,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Text(
+                                text = "පිළිගැනීමේ හඬ (Welcome Boss)",
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                        Switch(
+                            checked = isWelcomeSoundEnabled,
+                            onCheckedChange = { newValue ->
+                                if (requiresAuth) {
+                                    onRequestUnlock { onToggleWelcomeSound(newValue) }
+                                } else {
+                                    onToggleWelcomeSound(newValue)
+                                }
+                            },
+                            modifier = Modifier.testTag("welcome_sound_switch")
+                        )
+                    }
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
+                    Text(
+                        text = "ඇප් එක විවෘත කරන සෑම අවස්ථාවකම 'Welcome Boss' පිළිගැනීමේ හඬ වාදනය වේ.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    OutlinedButton(
+                        onClick = onTestWelcomeSound,
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.primary
+                        ),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier
+                            .minimumInteractiveComponentSize()
+                            .testTag("test_welcome_sound_button")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.PlayArrow,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "හඬ පරීක්ෂා කරන්න (Test Sound)",
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                }
+            }
+        }
+
         // Offline App Info & Backup/Restore Card
         item {
             GlassCard {
@@ -114,7 +424,8 @@ fun SettingsScreen(
                         )
                         Text(
                             text = "දුරකථනයේ Offline භාවිතය සහ දත්ත ආරක්ෂණය",
-                            style = MaterialTheme.typography.titleSmall
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
@@ -131,7 +442,7 @@ fun SettingsScreen(
                             onClick = onBackupClick,
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = Color.White
+                                contentColor = MaterialTheme.colorScheme.onPrimary
                             ),
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier
@@ -149,7 +460,17 @@ fun SettingsScreen(
                         }
 
                         OutlinedButton(
-                            onClick = onRestoreClick,
+                            onClick = {
+                                if (requiresAuth) {
+                                    onRequestUnlock { onRestoreClick() }
+                                } else {
+                                    onRestoreClick()
+                                }
+                            },
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = MaterialTheme.colorScheme.primary
+                            ),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier
                                 .weight(1f)
@@ -196,7 +517,13 @@ fun SettingsScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Surface(
-                        onClick = { showResetConfirm = true },
+                        onClick = {
+                            if (requiresAuth) {
+                                onRequestUnlock { showResetConfirm = true }
+                            } else {
+                                showResetConfirm = true
+                            }
+                        },
                         shape = RoundedCornerShape(12.dp),
                         color = semantic.absentContainer,
                         border = BorderStroke(1.dp, semantic.absent.copy(alpha = 0.45f)),

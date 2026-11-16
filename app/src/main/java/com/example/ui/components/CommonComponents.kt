@@ -268,6 +268,7 @@ fun GlassCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         color = semantic.cardSurface,
+        contentColor = MaterialTheme.colorScheme.onSurface,
         tonalElevation = 2.dp,
         shadowElevation = 2.dp,
         border = BorderStroke(1.dp, borderColor ?: semantic.cardBorder)
@@ -369,7 +370,8 @@ fun MonthYearPickerDialog(
                         text = selectedYear.toString(),
                         fontFamily = JetBrainsMonoFontFamily,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     IconButton(onClick = { selectedYear += 1 }) {
                         Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "ඊළඟ වසර")

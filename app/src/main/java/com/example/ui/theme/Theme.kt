@@ -1,6 +1,7 @@
 package com.example.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
@@ -23,18 +24,23 @@ data class AttendanceSemanticColors(
     val headerReports: Color,
     val headerSettings: Color,
     val present: Color,
+    val presentSolid: Color,
     val presentContainer: Color,
     val onPresentContainer: Color,
     val absent: Color,
+    val absentSolid: Color,
     val absentContainer: Color,
     val onAbsentContainer: Color,
     val leave: Color,
+    val leaveSolid: Color,
     val leaveContainer: Color,
     val onLeaveContainer: Color,
     val dayShift: Color,
+    val dayShiftSolid: Color,
     val dayShiftContainer: Color,
     val onDayShiftContainer: Color,
     val nightShift: Color,
+    val nightShiftSolid: Color,
     val nightShiftContainer: Color,
     val onNightShiftContainer: Color,
     val indigoContainer: Color,
@@ -51,18 +57,23 @@ private val LightSemanticColors = AttendanceSemanticColors(
     headerReports = PurpleAccent,
     headerSettings = SettingsHeaderLight,
     present = EmeraldAccent,
+    presentSolid = EmeraldAccent,
     presentContainer = EmeraldContainerLight,
     onPresentContainer = Color(0xFF065F46),
     absent = RoseAbsent,
+    absentSolid = RoseAbsent,
     absentContainer = RoseContainerLight,
     onAbsentContainer = Color(0xFF9F1239),
     leave = AmberLeave,
+    leaveSolid = AmberLeave,
     leaveContainer = AmberContainerLight,
     onLeaveContainer = Color(0xFF92400E),
     dayShift = SkyShift,
+    dayShiftSolid = SkyShift,
     dayShiftContainer = SkyContainerLight,
     onDayShiftContainer = Color(0xFF075985),
     nightShift = PurpleAccent,
+    nightShiftSolid = PurpleAccent,
     nightShiftContainer = PurpleContainerLight,
     onNightShiftContainer = Color(0xFF6B21A8),
     indigoContainer = IndigoContainerLight,
@@ -72,25 +83,30 @@ private val LightSemanticColors = AttendanceSemanticColors(
 private val DarkSemanticColors = AttendanceSemanticColors(
     bgTop = SlateDarkBgTop,
     bgBottom = SlateDarkBgBottom,
-    cardSurface = SlateDarkSurface.copy(alpha = 0.88f),
-    cardBorder = Color.White.copy(alpha = 0.10f),
+    cardSurface = SlateDarkSurface.copy(alpha = 0.94f),
+    cardBorder = Color(0xFF475569).copy(alpha = 0.55f),
     headerAttendance = IndigoHeaderDark,
     headerEmployees = Color(0xFF047857),
     headerReports = Color(0xFF7E22CE),
     headerSettings = SettingsHeaderDark,
-    present = EmeraldVibrant,
+    present = Color(0xFF34D399),
+    presentSolid = Color(0xFF047857),
     presentContainer = EmeraldContainerDark,
     onPresentContainer = Color(0xFF6EE7B7),
     absent = Color(0xFFFB7185),
+    absentSolid = Color(0xFFE11D48),
     absentContainer = RoseContainerDark,
     onAbsentContainer = Color(0xFFFDA4AF),
     leave = Color(0xFFFBBF24),
+    leaveSolid = Color(0xFFB45309),
     leaveContainer = AmberContainerDark,
     onLeaveContainer = Color(0xFFFCD34D),
     dayShift = Color(0xFF38BDF8),
+    dayShiftSolid = Color(0xFF0369A1),
     dayShiftContainer = SkyContainerDark,
     onDayShiftContainer = Color(0xFF7DD3FC),
-    nightShift = PurpleVibrant,
+    nightShift = Color(0xFFC084FC),
+    nightShiftSolid = Color(0xFF7E22CE),
     nightShiftContainer = PurpleContainerDark,
     onNightShiftContainer = Color(0xFFD8B4FE),
     indigoContainer = IndigoContainerDark,
@@ -162,11 +178,14 @@ fun DiyathalawaAttendanceTheme(
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
     val semanticColors = if (darkTheme) DarkSemanticColors else LightSemanticColors
 
-    CompositionLocalProvider(LocalAttendanceColors provides semanticColors) {
-        MaterialTheme(
-            colorScheme = colorScheme,
-            typography = AppTypography,
-            shapes = AppShapes,
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = AppTypography,
+        shapes = AppShapes
+    ) {
+        CompositionLocalProvider(
+            LocalAttendanceColors provides semanticColors,
+            LocalContentColor provides colorScheme.onBackground,
             content = content
         )
     }

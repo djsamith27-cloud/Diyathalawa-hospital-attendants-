@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -55,12 +56,14 @@ import com.example.data.model.ShiftMode
 import com.example.ui.AttendanceViewModel
 import com.example.ui.components.AppTab
 import com.example.ui.components.GlassHeader
+import com.example.ui.components.PasswordPromptDialog
 import com.example.ui.screens.AttendanceScreen
 import com.example.ui.screens.EmployeesScreen
 import com.example.ui.screens.ReportsScreen
 import com.example.ui.screens.SettingsScreen
 import com.example.ui.theme.DiyathalawaAttendanceTheme
 import com.example.ui.theme.LocalAttendanceColors
+import com.example.util.WelcomeSoundPlayer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -70,26 +73,54 @@ class MainActivity : ComponentActivity() {
     private val viewModel: AttendanceViewModel by viewModels {
         AttendanceViewModel.Factory((application as AttendanceApplication).repository)
     }
+    private lateinit var welcomeSoundPlayer: WelcomeSoundPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        welcomeSoundPlayer = WelcomeSoundPlayer(applicationContext)
         setContent {
             val isDarkTheme by viewModel.isDarkTheme.collectAsStateWithLifecycle()
+            LaunchedEffect(Unit) {
+                if (viewModel.consumeStartupWelcomeSound()) {
+                    welcomeSoundPlayer.playWelcomeBoss()
+                }
+            }
+            LaunchedEffect(isDarkTheme) {
+                enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+                    navigationBarStyle = if (isDarkTheme) {
+                        SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+                    } else {
+                        SystemBarStyle.light(
+                            android.graphics.Color.TRANSPARENT,
+                            android.graphics.Color.TRANSPARENT
+                        )
+                    }
+                )
+            }
             DiyathalawaAttendanceTheme(darkTheme = isDarkTheme) {
                 AttendanceAppShell(
                     viewModel = viewModel,
-                    isDarkTheme = isDarkTheme
+                    isDarkTheme = isDarkTheme,
+                    onPlayWelcomeSound = { welcomeSoundPlayer.playWelcomeBoss() }
                 )
             }
         }
+    }
+
+    override fun onDestroy() {
+        if (::welcomeSoundPlayer.isInitialized) {
+            welcomeSoundPlayer.release()
+        }
+        super.onDestroy()
     }
 }
 
 @Composable
 private fun AttendanceAppShell(
     viewModel: AttendanceViewModel,
-    isDarkTheme: Boolean
+    isDarkTheme: Boolean,
+    onPlayWelcomeSound: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -97,12 +128,42 @@ private fun AttendanceAppShell(
 
     var activeTab by rememberSaveable { mutableStateOf(AppTab.ATTENDANCE) }
     var pendingExportContent by remember { mutableStateOf<String?>(null) }
+    var showPasswordPrompt by remember { mutableStateOf(false) }
+    var pendingPasswordAction by remember { mutableStateOf<(() -> Unit)?>(null) }
 
     val liveDateTime by viewModel.liveDateTimeText.collectAsStateWithLifecycle()
     val attendanceUiState by viewModel.attendanceUiState.collectAsStateWithLifecycle()
     val filteredEmployees by viewModel.filteredEmployees.collectAsStateWithLifecycle()
     val searchQuery by viewModel.employeeSearchQuery.collectAsStateWithLifecycle()
     val reportUiState by viewModel.monthlyReportState.collectAsStateWithLifecycle()
+    val isPasswordEnabled by viewModel.isPasswordEnabled.collectAsStateWithLifecycle()
+    val isAdminUnlocked by viewModel.isAdminUnlocked.collectAsStateWithLifecycle()
+    val isWelcomeSoundEnabled by viewModel.isWelcomeSoundEnabled.collectAsStateWithLifecycle()
+
+    val requestUnlockAndRun: (() -> Unit) -> Unit = { action ->
+        if (isPasswordEnabled && !isAdminUnlocked) {
+            pendingPasswordAction = action
+            showPasswordPrompt = true
+        } else {
+            action()
+        }
+    }
+
+    if (showPasswordPrompt) {
+        PasswordPromptDialog(
+            onDismiss = {
+                showPasswordPrompt = false
+                pendingPasswordAction = null
+            },
+            onVerify = { pwd -> viewModel.unlockWithPassword(pwd) },
+            onVerified = {
+                val action = pendingPasswordAction
+                showPasswordPrompt = false
+                pendingPasswordAction = null
+                action?.invoke()
+            }
+        )
+    }
 
     LaunchedEffect(Unit) {
         viewModel.snackbarMessages.collect { msg ->
@@ -192,6 +253,7 @@ private fun AttendanceAppShell(
 
         Scaffold(
             containerColor = androidx.compose.ui.graphics.Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onBackground,
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             topBar = {
@@ -201,14 +263,15 @@ private fun AttendanceAppShell(
                     isDarkTheme = isDarkTheme,
                     onToggleTheme = { viewModel.toggleTheme() },
                     onBackupClick = triggerBackup,
-                    onRestoreClick = triggerRestore
+                    onRestoreClick = { requestUnlockAndRun(triggerRestore) }
                 )
             },
             bottomBar = {
                 if (!useNavRail) {
                     NavigationBar(
                         windowInsets = WindowInsets.navigationBars,
-                        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.94f),
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
                         tonalElevation = 8.dp
                     ) {
                         AppTab.entries.forEach { tab ->
@@ -243,7 +306,8 @@ private fun AttendanceAppShell(
             ) {
                 if (useNavRail) {
                     NavigationRail(
-                        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.92f),
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.fillMaxHeight()
                     ) {
                         AppTab.entries.forEach { tab ->
@@ -288,6 +352,10 @@ private fun AttendanceAppShell(
                             when (tab) {
                                 AppTab.ATTENDANCE -> AttendanceScreen(
                                     uiState = attendanceUiState,
+                                    isPasswordEnabled = isPasswordEnabled,
+                                    isAdminUnlocked = isAdminUnlocked,
+                                    onRequestUnlock = requestUnlockAndRun,
+                                    onLockAdminSession = { viewModel.lockAdminSession() },
                                     onSelectDate = { viewModel.selectDate(it) },
                                     onShiftDateByDays = { viewModel.shiftDateByDays(it) },
                                     onSetShiftMode = { viewModel.setShiftMode(it) },
@@ -335,6 +403,16 @@ private fun AttendanceAppShell(
                                 )
 
                                 AppTab.SETTINGS -> SettingsScreen(
+                                    isPasswordEnabled = isPasswordEnabled,
+                                    isAdminUnlocked = isAdminUnlocked,
+                                    isWelcomeSoundEnabled = isWelcomeSoundEnabled,
+                                    onToggleWelcomeSound = { viewModel.setWelcomeSoundEnabled(it) },
+                                    onTestWelcomeSound = onPlayWelcomeSound,
+                                    onRequestUnlock = requestUnlockAndRun,
+                                    onLockAdminSession = { viewModel.lockAdminSession() },
+                                    onSetupPassword = { pwd -> viewModel.setupPassword(pwd) },
+                                    onChangePassword = { cur, next -> viewModel.changePassword(cur, next) },
+                                    onRemovePassword = { cur -> viewModel.removePassword(cur) },
                                     onBackupClick = triggerBackup,
                                     onRestoreClick = triggerRestore,
                                     onConfirmResetAll = { viewModel.resetAllData() }
